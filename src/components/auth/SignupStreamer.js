@@ -17,12 +17,15 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 
+import FileUpload from '../FileUpload'
+// import {DropzoneArea} from 'material-ui-dropzone'
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://pioneer.com/">
+        Pioneer
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -124,14 +127,19 @@ export default function SignupStreamer() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <Typography component="h1" variant="h5">
+                  Avatar
+                </Typography>
+                <FileUpload/>
+                {/* <DropzoneArea/> */}
+                {/* <TextField
                   required
                   fullWidth
                   id="profileImage"
                   label="Profile Image"
                   name="profileImage"
                   autoComplete="profile-image"
-                />
+                /> */}
               </Grid>
               <Grid item xs={12}>
                 <TextField

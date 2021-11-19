@@ -103,7 +103,10 @@ const Navbar = () => {
           <Toolbar sx={{ flexWrap: 'wrap' }}>
             <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
               <nav>
-                <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
+                <Link variant="button" color="primary" href="#" sx={{ my: 1, mx: 1.5 }}>
+                  Home
+                </Link>
+                <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }}>
                   Gender1
                 </Link>
                 <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
