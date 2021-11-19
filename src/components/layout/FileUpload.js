@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Avatar from '@mui/material/Avatar'
 import { Container } from "@mui/material";
+import { id } from "date-fns/locale";
 
 /**
  * Component to handle file upload. Works for image
@@ -20,7 +21,7 @@ function FileUpload() {
 
   // Handles file upload event and updates state
   function handleUpload(event) {
-    setFile(event.target.files[0]);
+    if(event.target.files[0]) setFile(event.target.files[0]);
 
     // Add code here to upload file to server
     // ...
@@ -28,8 +29,6 @@ function FileUpload() {
 
   return (
     <Container sx={{display: 'flex', flexDirection: 'row' }}>
-        
-
         {
             file? <ImageThumb image={file} /> : <Avatar src="/avatar/avatar.png" sx={{ width: 200, height: 200, border: 1, borderColor: "primary" }}/>
         }

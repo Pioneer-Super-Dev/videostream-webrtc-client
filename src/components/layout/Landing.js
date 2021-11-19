@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {CircleArrow as ScrollUpButton} from "react-scroll-up-button";
 
 function Copyright(props) {
   return (
@@ -40,13 +41,14 @@ const Landing = () => {
       <Grid container spacing={4}>
         {cards.map((card) => (
           <Grid item key={card} xs={12} sm={6} md={4}>
-            <Link href={card}>
+            <Link href={"streamer" + card}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
                     height="140"
-                    image= {"/avatar/avatar" + card % 5 + ".png"}
+                    // image= {"/avatar/avatar" + (card % 5 + 1) + ".png"}
+                    image = {"/avatar/avatar" + (1 + Math.floor(Math.random() * 4)) + ".png"}
                     alt="avatar"
                   />
                   <CardContent>
@@ -61,6 +63,7 @@ const Landing = () => {
         ))}
       </Grid>
       <Copyright sx={{ mt: 5 }} />
+      <ScrollUpButton />
     </Container>
   );
 };

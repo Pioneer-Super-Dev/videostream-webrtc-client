@@ -12,12 +12,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 
-import FileUpload from '../FileUpload'
+import FileUpload from '../layout/FileUpload'
+import CountrySelect from '../layout/CountrySelect';
 // import {DropzoneArea} from 'material-ui-dropzone'
 
 function Copyright(props) {
@@ -38,6 +43,12 @@ const theme = createTheme();
 export default function SignupStreamer() {
 
   const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+
+  const [gender, setGender] = React.useState('');
+
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
+  };
 
   const handleChange = (newValue) => {
     setValue(newValue);
@@ -124,6 +135,7 @@ export default function SignupStreamer() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  placeholder="longer than 6"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -165,14 +177,15 @@ export default function SignupStreamer() {
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                {/* <TextField
                   required
                   fullWidth
                   id="country"
                   label="Country"
                   name="country"
                   autoComplete="country"
-                />
+                /> */}
+                <CountrySelect/>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -195,15 +208,29 @@ export default function SignupStreamer() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                {/* <TextField
                   required
                   fullWidth
                   id="gender"
                   label="Gender"
                   name="gender"
                   autoComplete="gender"
-                />
+                /> */}
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={gender}
+                    label="Gender"
+                    onChange={handleGenderChange}
+                  >
+                    <MenuItem value={"male"}>Male</MenuItem>
+                    <MenuItem value={"female"}>Female</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
+              
               <Grid item xs={12}>
                 <TextField
                   multiline
@@ -214,6 +241,7 @@ export default function SignupStreamer() {
                   label="Biography"
                   name="biography"
                   autoComplete="biography"
+                  placeholder="more than 100 characters"
                 />
               </Grid>
               {/* <Grid item xs={12}>

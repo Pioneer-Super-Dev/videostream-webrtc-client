@@ -99,6 +99,7 @@ export default function SignupUser() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  placeholder="longer than 6"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -121,6 +122,7 @@ export default function SignupUser() {
                   label="Biography"
                   name="biography"
                   autoComplete="biography"
+                  placeholder="more than 100 characters"
                 />
               </Grid>
               {/* <Grid item xs={12}>
