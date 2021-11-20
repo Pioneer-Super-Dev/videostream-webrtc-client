@@ -28,7 +28,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function Login() {
+export default function LoginStreamer() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -55,7 +55,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in Streamer
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -87,6 +87,15 @@ export default function Login() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              href="/broadcaster"
+            >
+              Sign In
+            </Button>
+            {/* <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
             >
               Sign In as User
             </Button>
@@ -97,18 +106,18 @@ export default function Login() {
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In as Streamer
-            </Button>
+            </Button> */}
             <Grid container>
               <Grid item xs>
                 <Link href="/signupuser" variant="body2">
-                 {"Don't have an account? Sign Up User"}
+                 {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Link href="/signupstreamer" variant="body2">
                   {"Sign Up Streamer"}
                 </Link>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>
