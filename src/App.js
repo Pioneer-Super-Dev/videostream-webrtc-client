@@ -6,7 +6,7 @@ import { LOGOUT } from './actions/types';
 //Redux
 import {Provider} from 'react-redux';
 import store from './store';
-import { loadUser } from './actions/auth';
+import { loadUser, loadStreamer } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
 
 import Landing from './components/layout/Landing';
@@ -30,9 +30,10 @@ function App() {
 
   useEffect(() => {
     if(localStorage.token) {
-      setAuthToken(localStorage.token);
+      setAuthToken(localStorage.token, localStorage.level);
     }
-    store.dispatch(loadUser());
+    if(localStorage.level == 1) store.dispatch(loadStreamer());
+    else store.dispatch(loadUser());
 
     window.addEventListener('storage', () => {
       if(!localStorage.token) store.dispatch({type: LOGOUT});
@@ -53,7 +54,7 @@ function App() {
               <Route path="signupuser" element={<SignupUser/>}/>
               <Route path="signupstreamer" element={<SignupStreamer/>}/>
               <Route path="broadcaster" element={<Broadcaster/>}/>
-            <Route path="watcher" element={<Watcher/>}/>
+              <Route path="watcher" element={<Watcher/>}/>
             </Route>
           </Routes>
           {/* </Container> */}

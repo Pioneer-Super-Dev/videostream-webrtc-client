@@ -33,7 +33,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const LoginUser = ({ loginUser, isAuthenticated }) => {
+const LoginUser = ({ loginUser, isAuthenticated, level }) => {
 
   const [formData, setFormData] = React.useState({
     email: '',
@@ -51,8 +51,7 @@ const LoginUser = ({ loginUser, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
-    console.log("loginUser is authenticated");
-    return <Navigate to="/watcher" />;
+    if( level == 2 ) return <Navigate to="/watcher" />;
   }
   
 
@@ -147,11 +146,13 @@ const LoginUser = ({ loginUser, isAuthenticated }) => {
 
 LoginUser.propTypes = {
   loginUser: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
+  level: PropTypes.number
 };
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  level: state.auth.level
 });
 
 export default connect(mapStateToProps, { loginUser })(LoginUser);

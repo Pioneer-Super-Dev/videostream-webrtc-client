@@ -47,7 +47,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
+const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) => {
 
   const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
   const [gender1, setGender] = React.useState('');
@@ -96,7 +96,7 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
   };
 
   if (isAuthenticated) {
-    // <Navigate to="/loginstreamer" />;
+    if(level == 1) return <Navigate to="/loginstreamer" />;
   }
 
   return (
@@ -333,11 +333,13 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
 SignupStreamer.propTypes = {
   setAlert: PropTypes.func.isRequired,
   registerStreamer: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
+  level: PropTypes.number
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  level: state.auth.level
 });
 
 export default connect(mapStateToProps, { setAlert, registerStreamer })(SignupStreamer);

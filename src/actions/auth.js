@@ -18,7 +18,8 @@ export const loadUser = () => async dispatch => {
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data
+      payload: res.data,
+      level: 2
     });
   } catch (err) {
     dispatch({
@@ -61,7 +62,8 @@ export const loginUser = (email, password) => async dispatch => {
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data
+      payload: res.data,
+      level: 2
     });
 
     console.log(res.data);
@@ -97,7 +99,8 @@ export const loadStreamer = () => async dispatch => {
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data
+      payload: res.data,
+      level: 1
     });
 
   } catch (err) {
@@ -143,7 +146,8 @@ export const loginStreamer = (email, password) => async dispatch => {
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data
+      payload: res.data,
+      level: 1
     });
 
     dispatch(loadStreamer());

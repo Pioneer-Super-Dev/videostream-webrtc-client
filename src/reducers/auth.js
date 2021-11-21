@@ -11,13 +11,14 @@ import {
   
   const initialState = {
     token: localStorage.getItem('token'),
+    level: 0,
     isAuthenticated: null,
     loading: true,
     user: null
   };
   
   function authReducer(state = initialState, action) {
-    const { type, payload } = action;
+    const { type, payload, level } = action;
   
     switch (type) {
       case USER_LOADED:
@@ -25,6 +26,7 @@ import {
           ...state,
           isAuthenticated: true,
           loading: false,
+          level: level,
           user: payload
         };
       case REGISTER_SUCCESS:
@@ -33,6 +35,7 @@ import {
           ...state,
           ...payload,
           isAuthenticated: true,
+          level: level,
           loading: false
         };
       case ACCOUNT_DELETED:
@@ -42,6 +45,7 @@ import {
           ...state,
           token: null,
           isAuthenticated: false,
+          level: 0,
           loading: false,
           user: null
         };

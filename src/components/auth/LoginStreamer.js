@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import {Redirect } from 'react-router-dom';
+import {Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginStreamer } from '../../actions/auth';
@@ -33,7 +33,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const LoginStreamer = ({loginStreamer, isAuthenticated}) => {
+const LoginStreamer = ({loginStreamer, isAuthenticated, level}) => {
 
   const [formData, setFormData] = React.useState({
     email: '',
@@ -51,8 +51,7 @@ const LoginStreamer = ({loginStreamer, isAuthenticated}) => {
   };
 
   if (isAuthenticated) {
-    console.log("loginStreamer is authenticated");
-    //return <Redirect to="/dashboard" />;
+    if(level == 1) return <Navigate to="/broadcaster" />;
   }
 
   return (
@@ -147,11 +146,13 @@ const LoginStreamer = ({loginStreamer, isAuthenticated}) => {
 
 LoginStreamer.propTypes = {
   loginStreamer: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
+  level: PropTypes.number
 };
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  level: state.auth.level
 });
 
 export default connect(mapStateToProps, { loginStreamer })(LoginStreamer);
