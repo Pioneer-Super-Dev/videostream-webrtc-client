@@ -6,10 +6,12 @@ import SignupUser from '../auth/SignupUser';
 import SignupStreamer from '../auth/SignupStreamer';
 import Broadcaster from '../streaming/Broadcaster';
 import Watcher from '../streaming/Watcher';
+import Alert from '../layout/Alert';
 
 const Routers = () => {
   return (
     <Fragment>
+      <Alert />
       <Routes>
         <Route path="loginuser" element={<LoginUser/>} />
         <Route path="loginstreamer" element={<LoginStreamer/>} />

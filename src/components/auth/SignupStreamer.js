@@ -1,4 +1,11 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';
+import { registerStreamer } from '../../actions/auth';
+import PropTypes from 'prop-types';
+
+
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -40,30 +47,59 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignupStreamer() {
+const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
 
   const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
 
-  const [gender, setGender] = React.useState('');
+  const [formData, setFormData] = React.useState({
+    fistname: '',
+    lastname: '',
+    nickname: '',
+    email: '',
+    password: '',
+    password2: '',
+    profileimage: '',
+    phonenumber: '',
+    birthday: '',
+    country: '',
+    address: '',
+    zipcode: '',
+    gender: '',
+    biography: '',
+  });
 
-  const handleGenderChange = (event) => {
-    setGender(event.target.value);
-  };
+  const { firstname, lastname, nickname, email, password, password2, profileimage, phonenumber, birthday, country, address, zipcode, gender, biography } = formData;
+
+  const onChange = (e) =>
+    setFormData({...formData, [e.target.name]: e.target.value});
+
 
   const handleChange = (newValue) => {
-    setValue(newValue);
+    console.log(newValue);
+    setFormData({...formData, birthday: newValue});
+  };
+
+  const onGenderChange = (newValue) => {
+    console.log(newValue);
+    setFormData({...formData, gender: newValue});
   };
 
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(firstname, lastname, nickname, email, password, password2, profileimage, phonenumber, birthday, country, address, zipcode, gender, biography);
+    e.preventDefault();
+    if(password !== password2) {
+      setAlert('Passwords do not match', 'danger');
+    } else {
+      registerStreamer({ firstname, lastname, nickname, email, password, password2, profileimage, phonenumber, country, address, zipcode, gender, biography });
+    }
   };
+
+  if (isAuthenticated) {
+    console.log("Streamer IS AUTHENTICATED");
+    //return <Redirect to="/dashboard" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -88,12 +124,13 @@ export default function SignupStreamer() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="firstname"
                   required
                   fullWidth
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -102,8 +139,9 @@ export default function SignupStreamer() {
                   fullWidth
                   id="lastName"
                   label="Last Name"
-                  name="lastName"
+                  name="lastname"
                   autoComplete="family-name"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -112,8 +150,9 @@ export default function SignupStreamer() {
                   fullWidth
                   id="nickName"
                   label="Nick Name"
-                  name="nickName"
+                  name="nickname"
                   autoComplete="nick-name"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -124,6 +163,7 @@ export default function SignupStreamer() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -136,13 +176,27 @@ export default function SignupStreamer() {
                   id="password"
                   autoComplete="new-password"
                   placeholder="longer than 6"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password2"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="confirm-password"
+                  placeholder="Retype Password"
+                  onChange={onChange}
+                />
+              </Grid>
+              {/* <Grid item xs={12}>
                 <Typography component="h1" variant="h5">
                   Avatar
                 </Typography>
-                <FileUpload/>
+                <FileUpload/> */}
                 {/* <DropzoneArea/> */}
                 {/* <TextField
                   required
@@ -152,15 +206,16 @@ export default function SignupStreamer() {
                   name="profileImage"
                   autoComplete="profile-image"
                 /> */}
-              </Grid>
+              {/* </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
                   id="phoneNumber"
                   label="PhoneNumber"
-                  name="phoneNumber"
+                  name="phonenumber"
                   autoComplete="phone-number"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -185,7 +240,7 @@ export default function SignupStreamer() {
                   name="country"
                   autoComplete="country"
                 /> */}
-                <CountrySelect/>
+                <CountrySelect onChange={onChange}/>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -195,6 +250,7 @@ export default function SignupStreamer() {
                   label="Address(optional)"
                   name="address"
                   autoComplete="address"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -203,8 +259,9 @@ export default function SignupStreamer() {
                   fullWidth
                   id="zipCode"
                   label="Zip Code"
-                  name="zipCode"
+                  name="zipcode"
                   autoComplete="zip-code"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -217,13 +274,11 @@ export default function SignupStreamer() {
                   autoComplete="gender"
                 /> */}
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                  <InputLabel id="demo-simple-select-label" value={value} onChange={onGenderChange} name="gender">Gender</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={gender}
                     label="Gender"
-                    onChange={handleGenderChange}
                   >
                     <MenuItem value={"male"}>Male</MenuItem>
                     <MenuItem value={"female"}>Female</MenuItem>
@@ -242,6 +297,7 @@ export default function SignupStreamer() {
                   name="biography"
                   autoComplete="biography"
                   placeholder="more than 100 characters"
+                  onChange={onChange}
                 />
               </Grid>
               {/* <Grid item xs={12}>
@@ -273,3 +329,15 @@ export default function SignupStreamer() {
     </ThemeProvider>
   );
 }
+
+SignupStreamer.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  registerStreamer: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { setAlert, registerStreamer })(SignupStreamer);

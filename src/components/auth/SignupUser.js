@@ -1,4 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';
+import { registerUser } from '../../actions/auth';
+import PropTypes from 'prop-types';
+
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -28,16 +34,55 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignupUser() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+//const SignupUser = () => {
+const SignupUser = ({ setAlert, registerUser, isAuthenticated }) => {
+
+  const [formData, setFormData] = React.useState({
+    fistname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    password2: '',
+    phonenumber: '',
+    biography: '',
+  });
+
+  const { firstname, lastname, email, password, password2, phonenumber, biography } = formData;
+
+  const onChange = (e) =>
+    setFormData({...formData, [e.target.name]: e.target.value});
+
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   // eslint-disable-next-line no-console
+  //   console.log({
+  //     firstname: data.get('firstname'),
+  //     lastname: data.get('lastname'),
+  //     email: data.get('email'),
+  //     password: data.get('password'),
+  //     password2: data.get('password2'),
+  //     phonenumber: data.get('phonenumber'),
+  //     biography: data.get('biography'),
+  //   });    
+  // };
+
+  const handleSubmit = async (e) => {
+
+    console.log(firstname, lastname, email, password, password2, phonenumber, biography);
+    e.preventDefault();
+    if(password !== password2) {
+      setAlert('Passwords do not match', 'danger');
+    } else {
+      registerUser({ firstname, lastname, email, password, password2, phonenumber, biography });
+    }
   };
+
+  if (isAuthenticated) {
+    console.log("User IS AUTHENTICATED");
+    //return <Redirect to="/dashboard" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -62,12 +107,13 @@ export default function SignupUser() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="firstname"
                   required
                   fullWidth
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -76,8 +122,9 @@ export default function SignupUser() {
                   fullWidth
                   id="lastName"
                   label="Last Name"
-                  name="lastName"
+                  name="lastname"
                   autoComplete="family-name"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -88,6 +135,7 @@ export default function SignupUser() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -100,6 +148,20 @@ export default function SignupUser() {
                   id="password"
                   autoComplete="new-password"
                   placeholder="longer than 6"
+                  onChange={onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password2"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="confirm-password"
+                  placeholder="Retype Password"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -108,8 +170,9 @@ export default function SignupUser() {
                   fullWidth
                   id="phoneNumber"
                   label="PhoneNumber"
-                  name="phoneNumber"
+                  name="phonenumber"
                   autoComplete="phone-number"
+                  onChange={onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -123,6 +186,7 @@ export default function SignupUser() {
                   name="biography"
                   autoComplete="biography"
                   placeholder="more than 100 characters"
+                  onChange={onChange}
                 />
               </Grid>
               {/* <Grid item xs={12}>
@@ -153,4 +217,17 @@ export default function SignupUser() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+SignupUser.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  registerUser: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { setAlert, registerUser })(SignupUser);
+//export default SignupUser;

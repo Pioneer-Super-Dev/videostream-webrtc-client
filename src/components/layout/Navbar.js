@@ -77,7 +77,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-const Navbarr = () => {
+const Navbar = () => {
   const [mobileMoreAnchorEl1, setMobileMoreAnchorEl1] = React.useState(null);
   const [mobileMoreAnchorEl2, setMobileMoreAnchorEl2] = React.useState(null);
 
@@ -202,7 +202,7 @@ const Navbarr = () => {
           <Toolbar sx={{ flexWrap: 'wrap' }}>
             <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
               <Link href="/">
-                <img src="logo_blue.png" alt="logo" style={{width: 150, verticalAlign: 'text-top'}}/>
+                <img src="logo.svg" alt="logo" style={{width: 150, verticalAlign: 'text-top'}}/>
               </Link>
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
@@ -293,4 +293,4 @@ const Navbarr = () => {
   );
 };
 
-export default Navbarr;
+export default Navbar;

@@ -13,6 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import {Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { loginStreamer } from '../../actions/auth';
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -28,16 +33,28 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function LoginStreamer() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+const LoginStreamer = ({loginStreamer, isAuthenticated}) => {
+
+  const [formData, setFormData] = React.useState({
+    email: '',
+    password: ''
+  });
+
+  const { email, password } = formData;
+
+  const onChange = e =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log(email, password);
+    loginStreamer(email, password);
   };
+
+  if (isAuthenticated) {
+    console.log("loginStreamer is authenticated");
+    //return <Redirect to="/dashboard" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -67,6 +84,7 @@ export default function LoginStreamer() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={onChange}
             />
             <TextField
               margin="normal"
@@ -77,6 +95,7 @@ export default function LoginStreamer() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={onChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -126,3 +145,14 @@ export default function LoginStreamer() {
     </ThemeProvider>
   );
 }
+
+LoginStreamer.propTypes = {
+  loginStreamer: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { loginStreamer })(LoginStreamer);
