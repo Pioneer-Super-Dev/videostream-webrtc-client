@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import {Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginUser } from '../../actions/auth';
@@ -47,13 +47,12 @@ const LoginUser = ({ loginUser, isAuthenticated }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(email, password);
     loginUser(email, password);
   };
 
   if (isAuthenticated) {
     console.log("loginUser is authenticated");
-    //return <Redirect to="/dashboard" />;
+    return <Navigate to="/watcher" />;
   }
   
 

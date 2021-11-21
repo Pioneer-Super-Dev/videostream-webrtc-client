@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { registerStreamer } from '../../actions/auth';
 import PropTypes from 'prop-types';
@@ -50,6 +50,7 @@ const theme = createTheme();
 const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
 
   const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [gender1, setGender] = React.useState('');
 
   const [formData, setFormData] = React.useState({
     fistname: '',
@@ -58,10 +59,10 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
     email: '',
     password: '',
     password2: '',
-    profileimage: '',
+    profileimage: 'avatar.png',
     phonenumber: '',
     birthday: '',
-    country: '',
+    country: 'America',
     address: '',
     zipcode: '',
     gender: '',
@@ -75,30 +76,27 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
 
 
   const handleChange = (newValue) => {
-    console.log(newValue);
+    setValue(newValue);
     setFormData({...formData, birthday: newValue});
   };
 
-  const onGenderChange = (newValue) => {
-    console.log(newValue);
-    setFormData({...formData, gender: newValue});
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
+    setFormData({...formData, gender: event.target.value});
   };
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(firstname, lastname, nickname, email, password, password2, profileimage, phonenumber, birthday, country, address, zipcode, gender, biography);
-    e.preventDefault();
     if(password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      registerStreamer({ firstname, lastname, nickname, email, password, password2, profileimage, phonenumber, country, address, zipcode, gender, biography });
+      registerStreamer({ firstname, lastname, nickname, email, password, profileimage, phonenumber, birthday, country, address, zipcode, gender, biography });
     }
   };
 
   if (isAuthenticated) {
-    console.log("Streamer IS AUTHENTICATED");
-    //return <Redirect to="/dashboard" />;
+    // <Navigate to="/loginstreamer" />;
   }
 
   return (
@@ -223,7 +221,7 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
                   <MobileDatePicker
                     required
                     fullWidth
-                    label="Date mobile"
+                    label="Birthday"
                     inputFormat="MM/dd/yyyy"
                     value={value}
                     onChange={handleChange}
@@ -274,11 +272,13 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated }) => {
                   autoComplete="gender"
                 /> */}
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label" value={value} onChange={onGenderChange} name="gender">Gender</InputLabel>
+                  <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Gender"
+                    value={gender1}
+                    onChange={handleGenderChange}
                   >
                     <MenuItem value={"male"}>Male</MenuItem>
                     <MenuItem value={"female"}>Female</MenuItem>

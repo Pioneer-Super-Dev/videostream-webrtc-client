@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { registerUser } from '../../actions/auth';
 import PropTypes from 'prop-types';
@@ -69,19 +69,16 @@ const SignupUser = ({ setAlert, registerUser, isAuthenticated }) => {
   // };
 
   const handleSubmit = async (e) => {
-
-    console.log(firstname, lastname, email, password, password2, phonenumber, biography);
     e.preventDefault();
     if(password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      registerUser({ firstname, lastname, email, password, password2, phonenumber, biography });
+      registerUser({ firstname, lastname, email, password, phonenumber, biography });
     }
   };
 
   if (isAuthenticated) {
-    console.log("User IS AUTHENTICATED");
-    //return <Redirect to="/dashboard" />;
+    // <Navigate to="/loginuser" />;
   }
 
   return (

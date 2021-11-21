@@ -47,7 +47,6 @@ const LoginStreamer = ({loginStreamer, isAuthenticated}) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(email, password);
     loginStreamer(email, password);
   };
 
@@ -106,7 +105,7 @@ const LoginStreamer = ({loginStreamer, isAuthenticated}) => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              href="/broadcaster"
+              //href="/broadcaster"
             >
               Sign In
             </Button>

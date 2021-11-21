@@ -10,6 +10,7 @@ import {
   LOGOUT
 } from './types';
 
+
 // Load User
 export const loadUser = () => async dispatch => {
   try {
@@ -36,11 +37,13 @@ export const registerUser = formData => async dispatch => {
       payload: res.data
     });
     dispatch(loadUser());
+
+    dispatch(setAlert('Sign Up Successfully', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'error')));
     }
 
     dispatch({
@@ -61,12 +64,16 @@ export const loginUser = (email, password) => async dispatch => {
       payload: res.data
     });
 
+    console.log(res.data);
+
     dispatch(loadUser());
+
+    dispatch(setAlert('Login Successfully', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'error')));
     }
 
     dispatch({
@@ -92,6 +99,7 @@ export const loadStreamer = () => async dispatch => {
       type: USER_LOADED,
       payload: res.data
     });
+
   } catch (err) {
     dispatch({
       type: AUTH_ERROR
@@ -109,11 +117,13 @@ export const registerStreamer = formData => async dispatch => {
       payload: res.data
     });
     dispatch(loadStreamer());
+
+    dispatch(setAlert('Sign Up Successfully', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'error')));
     }
 
     dispatch({
@@ -126,6 +136,8 @@ export const registerStreamer = formData => async dispatch => {
 export const loginStreamer = (email, password) => async dispatch => {
   const body = { email, password };
 
+  
+
   try {
     const res = await api.post('/auth/streamer', body);
 
@@ -135,11 +147,12 @@ export const loginStreamer = (email, password) => async dispatch => {
     });
 
     dispatch(loadStreamer());
+    dispatch(setAlert('Login Successfully', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach(error => dispatch(setAlert(error.msg, 'error')));
     }
 
     dispatch({

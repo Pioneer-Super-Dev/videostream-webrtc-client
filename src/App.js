@@ -2,6 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { LOGOUT } from './actions/types';
 
+
 //Redux
 import {Provider} from 'react-redux';
 import store from './store';
