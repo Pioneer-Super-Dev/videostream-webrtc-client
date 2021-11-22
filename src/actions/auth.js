@@ -113,6 +113,7 @@ export const loadStreamer = () => async dispatch => {
 // Register Streamer
 export const registerStreamer = formData => async dispatch => {
   try {
+    console.log(formData);
     const res = await api.post('/streamers', formData);
 
     dispatch({
