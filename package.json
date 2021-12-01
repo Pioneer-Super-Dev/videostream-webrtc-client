@@ -16,8 +16,10 @@
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.24.0",
     "date-fns": "^2.25.0",
     "material-ui-dropzone": "^3.5.0",
+    "notistack": "^2.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
@@ -27,6 +29,8 @@
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.0",
+    "simple-peer": "^9.11.0",
+    "socket.io-client": "^4.4.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

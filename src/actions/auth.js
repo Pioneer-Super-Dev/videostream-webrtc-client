@@ -140,8 +140,6 @@ export const registerStreamer = formData => async dispatch => {
 export const loginStreamer = (email, password) => async dispatch => {
   const body = { email, password };
 
-  
-
   try {
     const res = await api.post('/auth/streamer', body);
 

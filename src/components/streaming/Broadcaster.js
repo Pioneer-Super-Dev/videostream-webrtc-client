@@ -24,6 +24,10 @@ import Input from '@mui/material/Input';
 import IconButton from '@mui/material/IconButton';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import NearMeDisabledOutlinedIcon from '@mui/icons-material/NearMeDisabledOutlined';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Navigate } from 'react-router-dom';
+import BroadcasterVideoChat from './BroadcasterVideoChat';
 
 const ariaLabel = { 'aria-label': 'description' };
 
@@ -49,7 +53,8 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function Broadcaster() {
+const Broadcaster = ({auth, level}) => {
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -59,6 +64,8 @@ export default function Broadcaster() {
       password: data.get('password'),
     });
   };
+
+  if(level != 1) return <Navigate to="/loginstreamer" />;
 
   return (
     <ThemeProvider theme={theme}>
@@ -72,63 +79,12 @@ export default function Broadcaster() {
             alignItems: 'center',
           }}
         >
-            <Grid container sx={{display: 'flex', justifyContent: 'space-evenly', flexGrow: 1}}>
-                <Button href="#" variant="outlined" sx={{mt: 1}} startIcon={<NearMeOutlinedIcon />}>
-                  Broadcast
-                </Button>
-                <Button href="#" variant="outlined" sx={{mt: 1}} startIcon={<NearMeDisabledOutlinedIcon />}>
-                  Ban User
-                </Button>
-            </Grid>
-            <Grid container spacing={2} sx={{flexGrow: 1, mt: 2}}>
-              <Grid item md={8} sm={12} xs={12}>
-                  <video width="100%" height="100%" style={{ border: "solid" }}></video>
-              </Grid>
-              <Grid style={{ position: "relative" }} item md={4} sm={12} xs={12} sx={{mt: 1}}>
-                <Grid style={{ height: "75%", overFlowX: "hidden", overflowY: "auto" }} container  sx={{flexGrow: 1}}>
-                  <ListItem style={{ height: "fit-content" }}>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                </Grid>
-                <Grid style={{ position: "absolute", bottom: "0" }} container sx={{flexGrow: 1}} spacing={1}>
-                  <Grid item  md={10} sm={10} xs={10}>
-                    <Input fullWidth placeholder="Send Message" inputProps={ariaLabel}/>
-                  </Grid>
-                  <Grid item  md={2} sm={2} xs={2}>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <SendIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Grid>
-              
-            </Grid>
+            <BroadcasterVideoChat/>
             <Grid container spacing={2} sx={{flexGrow: 1, mt: 8}} item md={8} sm={12} xs={12}>
                <List>
                 <ListItem alignItems="flex-start">
                   <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
+                    <Avatar alt="Remy Sharp" src={"http://" + window.location.hostname + ":5000/images/" + "avatar" + (1 + Math.floor(Math.random() * 4)) + ".png"} />
                   </ListItemAvatar>
                   <ListItemText
                     primary="Biography"
@@ -140,9 +96,8 @@ export default function Broadcaster() {
                           variant="body2"
                           color="text.primary"
                         >
-                          I am a Streamer.  
+                        {auth.user && auth.user.bio}  
                         </Typography>
-                        {" — I'll be in your neighborhood doing errands this…— I'll be in your neighborhood doing errands this…— I'll be in your neighborhood doing errands this…— I'll be in your neighborhood doing errands this…— I'll be in your neighborhood doing errands this…— I'll be in your neighborhood doing errands this…"}
                       </React.Fragment>
                     }
                   />
@@ -152,36 +107,47 @@ export default function Broadcaster() {
 
             <Grid container spacing={2} sx={{flexGrow: 1, mt: 1}}>
               <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
+                <Item>Video</Item>
               </Grid>
               <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
+                <Item>Video</Item>
               </Grid>
               <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
+                <Item>Video</Item>
               </Grid>
               <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
+                <Item>Video</Item>
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{flexGrow: 1, mt: 1}}>
               <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
+                <Item>Image</Item>
               </Grid>
               <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
+                <Item>Image</Item>
               </Grid>
               <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
+                <Item>Image</Item>
               </Grid>
               <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
+                <Item>Image</Item>
               </Grid>
             </Grid>
-            
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
 }
+
+Broadcaster.propTypes = {
+  auth: PropTypes.object,
+  level: PropTypes.number
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  level: state.auth.level
+});
+
+export default connect(mapStateToProps)(Broadcaster);

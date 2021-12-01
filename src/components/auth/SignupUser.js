@@ -52,33 +52,17 @@ const SignupUser = ({ setAlert, registerUser, isAuthenticated, level }) => {
   const onChange = (e) =>
     setFormData({...formData, [e.target.name]: e.target.value});
 
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   // eslint-disable-next-line no-console
-  //   console.log({
-  //     firstname: data.get('firstname'),
-  //     lastname: data.get('lastname'),
-  //     email: data.get('email'),
-  //     password: data.get('password'),
-  //     password2: data.get('password2'),
-  //     phonenumber: data.get('phonenumber'),
-  //     biography: data.get('biography'),
-  //   });    
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(password !== password2) {
-      setAlert('Passwords do not match', 'danger');
+      setAlert('Passwords do not match', 'error');
     } else {
       registerUser({ firstname, lastname, email, password, phonenumber, biography });
     }
   };
 
   if (isAuthenticated) {
-    if(level == 2) return <Navigate to="/loginuser" />;
+    //if(level == 2) return <Navigate to="/loginuser" />;
   }
 
   return (

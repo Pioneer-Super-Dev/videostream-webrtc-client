@@ -20,7 +20,6 @@ import {CircleArrow as ScrollUpButton} from "react-scroll-up-button";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Landing.css';
-import axios from 'axios';
 
 function Copyright(props) {
   return (
@@ -39,17 +38,8 @@ function Copyright(props) {
 const Landing = ({broadcast}) => {
 
   //const [cards, setCards] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53]);
-  
-  const [cards, setCards] = React.useState([]);
 
-  React.useEffect(() => {
-
-    setInterval( () =>
-      axios.get('api/broadcasters')
-        .then((response) => setCards(response.data))
-        .catch((err) => console.log(err))
-    , 1000)
-  }, []);
+  const [cards, setCards] = React.useState(broadcast);
 
   return (
     <Container sx={{ py: 8 }} maxWidth="md">
@@ -65,13 +55,13 @@ const Landing = ({broadcast}) => {
                   <CardMedia
                     component="img"
                     height="140"
-                    // image = {"http://" + window.location.hostname + ":5000/images/" + "avatar" + (1 + Math.floor(Math.random() * 4)) + ".png"}
-                    image = {"http://" + window.location.hostname + ":5000/images/" + card.profileimage}
+                    image = {"http://" + window.location.hostname + ":5000/images/" + "avatar" + (1 + Math.floor(Math.random() * 4)) + ".png"}
+                    // image = {"/avatar/avatar" + (1 + Math.floor(Math.random() * 4)) + ".png"}
                     alt="avatar"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      {card.name}
+                      Streamer {card.name}
                     </Typography>
                   </CardContent>
                 </CardActionArea>

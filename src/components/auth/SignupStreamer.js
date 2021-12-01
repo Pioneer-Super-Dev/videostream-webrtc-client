@@ -65,9 +65,15 @@ const ImageThumb = ({ image }) => {
 
 const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) => {
   const [file, setFile] = React.useState("");
-  const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [value, setValue] = React.useState(new Date('2022-01-01'));
   const [gender1, setGender] = React.useState('');
   const [country1, setCountry] = React.useState('');
+
+  // React.useEffect(() => {
+  //   if (isAuthenticated) {
+  //     if(level == 1) return <Navigate to="/loginstreamer" />;
+  //   }
+  // }, []);
 
   const [formData, setFormData] = React.useState({
     fistname: '',
@@ -76,32 +82,30 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) 
     email: '',
     password: '',
     password2: '',
-    profileimage: 'avatar.png',
     phonenumber: '',
-    birthday: '',
-    country: 'America',
+    birthday: '2022-01-01',
+    country: '',
     address: '',
     zipcode: '',
-    gender: '',
-    biography: '',
   });
 
-  const { firstname, lastname, nickname, email, password, password2, profileimage, phonenumber, birthday, country, address, zipcode, gender, biography } = formData;
+  const { firstname, lastname, nickname, email, password, password2, phonenumber, birthday, country, address, zipcode} = formData;
 
-  function handleUpload(event) {
-    if(event.target.files[0]) setFile(event.target.files[0]);
+  //Image Upload
+  // function handleUpload(event) {
+  //   if(event.target.files[0]) setFile(event.target.files[0]);
 
-    const data = new FormData();
+  //   const data = new FormData();
     
-    data.append( "image", event.target.files[0]);
+  //   data.append( "image", event.target.files[0]);
 
-    axios.post("api/upload",data)
-    .then((response) => setFormData({...formData, profileimage: response.data}))
-    .catch((err) => 
-      setAlert('Choose Proper Image', 'danger')
-    );
+  //   axios.post("api/upload",data)
+  //   .then((response) => setFormData({...formData, profileimage: response.data}))
+  //   .catch((err) => 
+  //     setAlert('Choose Proper Image', 'danger')
+  //   );
 
-  }
+  // }
 
   //Form Data Change
   const onChange = (e) =>
@@ -125,23 +129,23 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) 
   };
 
   //Gender Change
-  const handleGenderChange = (event) => {
-    setGender(event.target.value);
-    setFormData({...formData, gender: event.target.value});
-  };
+  // const handleGenderChange = (event) => {
+  //   setGender(event.target.value);
+  //   setFormData({...formData, gender: event.target.value});
+  // };
 
   //Sign Up Streamer
   const handleSubmit = (e) => {
     e.preventDefault();
     if(password !== password2) {
-      setAlert('Passwords do not match', 'danger');
+      setAlert('Passwords do not match', 'error');
     } else {
-      registerStreamer({ firstname, lastname, nickname, email, password, profileimage, phonenumber, birthday, country, address, zipcode, gender, biography });
+      registerStreamer({ firstname, lastname, nickname, email, password, phonenumber, birthday, country, address, zipcode});
     }
   };
 
   if (isAuthenticated) {
-    if(level == 1) return <Navigate to="/loginstreamer" />;
+    //if(level == 1) return <Navigate to="/loginstreamer" />;
   }
 
   return (
@@ -235,11 +239,10 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) 
                   onChange={onChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Typography component="h1" variant="h5">
                   Avatar
                 </Typography>
-                {/* <FileUpload/> */}
                 <Container sx={{display: 'flex', flexDirection: 'row' }}>
                   {
                       file? <ImageThumb image={file} /> : <Avatar src="/avatar/avatar1.png" sx={{ width: 200, height: 200, border: 1, borderColor: "primary" }}/>
@@ -251,7 +254,7 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) 
                       </IconButton>
                   </label>
                 </Container>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -341,15 +344,7 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) 
                   onChange={onChange}
                 />
               </Grid>
-              <Grid item xs={12}>
-                {/* <TextField
-                  required
-                  fullWidth
-                  id="gender"
-                  label="Gender"
-                  name="gender"
-                  autoComplete="gender"
-                /> */}
+              {/* <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                   <Select
@@ -363,9 +358,9 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) 
                     <MenuItem value={"female"}>Female</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
               
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <TextField
                   multiline
                   required
@@ -378,13 +373,8 @@ const SignupStreamer = ({ setAlert, registerStreamer, isAuthenticated, level }) 
                   placeholder="more than 100 characters"
                   onChange={onChange}
                 />
-              </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
               </Grid> */}
+              
             </Grid>
             <Button
               type="submit"

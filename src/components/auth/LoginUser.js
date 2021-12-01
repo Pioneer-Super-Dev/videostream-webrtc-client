@@ -51,7 +51,7 @@ const LoginUser = ({ loginUser, isAuthenticated, level }) => {
   };
 
   if (isAuthenticated) {
-    if( level == 2 ) return <Navigate to="/watcher" />;
+    if( level == 2 ) return <Navigate to="/" />;
   }
   
 

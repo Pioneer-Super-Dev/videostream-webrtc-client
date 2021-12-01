@@ -19,6 +19,9 @@ import SignupStreamer from './components/auth/SignupStreamer'
 import Broadcaster from './components/streaming/Broadcaster';
 import Watcher from './components/streaming/Watcher';
 
+import PrivateRoute from './components/routing/PrivateRoute';
+import NotFound from './components/layout/NotFound';
+
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -44,7 +47,6 @@ function App() {
     <Provider store={store}>
       <Router>
         <Fragment>
-          {/* <Container maxWidth="lx"> */}
           <Navbar/>
           <Routes>
             <Route path="/" element={<Landing/>}/>
@@ -54,10 +56,10 @@ function App() {
               <Route path="signupuser" element={<SignupUser/>}/>
               <Route path="signupstreamer" element={<SignupStreamer/>}/>
               <Route path="broadcaster" element={<Broadcaster/>}/>
-              <Route path="watcher" element={<Watcher/>}/>
+              <Route path="watcher/:id" element={<Watcher/>}/>
+              <Route element={<NotFound/>}/>
             </Route>
           </Routes>
-          {/* </Container> */}
         </Fragment>
       </Router>
     </Provider>

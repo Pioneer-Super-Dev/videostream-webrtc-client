@@ -7,18 +7,35 @@ import SignupStreamer from '../auth/SignupStreamer';
 import Broadcaster from '../streaming/Broadcaster';
 import Watcher from '../streaming/Watcher';
 import Alert from '../layout/Alert';
+import PrivateRoute from './PrivateRoute';
+import NotFound from '../layout/NotFound';
+
+import { SnackbarProvider} from 'notistack';
+import Slide from "@mui/material/Slide";
 
 const Routers = () => {
   return (
     <Fragment>
-      <Alert />
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        TransitionComponent={Slide}
+        maxSnack={10}
+        autoHideDuration={2000}
+        preventDuplicate={true}
+      >
+        <Alert />
+      </SnackbarProvider>
       <Routes>
         <Route path="loginuser" element={<LoginUser/>} />
         <Route path="loginstreamer" element={<LoginStreamer/>} />
         <Route path="signupuser" element={<SignupUser/>}/>
         <Route path="signupstreamer" element={<SignupStreamer/>}/>
         <Route path="broadcaster" element={<Broadcaster/>}/>
-        <Route path="watcher" element={<Watcher/>}/>
+        <Route path="watcher/:id" element={<Watcher/>}/>
+        <Route element={<NotFound/>}/>
       </Routes>
     </Fragment>
   );

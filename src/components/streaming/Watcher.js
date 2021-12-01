@@ -22,14 +22,18 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import SendIcon from '@mui/icons-material/Send'
 import Input from '@mui/material/Input';
 import IconButton from '@mui/material/IconButton';
-import PresentIcon from '@mui/icons-material/PresentToAll';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ListSubheader from '@mui/material/ListSubheader';
 import InfoIcon from '@mui/icons-material/Info';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Navigate } from 'react-router-dom';
+import WatcherVideoChat from './WatcherVideoChat';
+import PresentIcon from '@mui/icons-material/PresentToAll';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const ariaLabel = { 'aria-label': 'description' };
 
@@ -55,7 +59,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function Watcher() {
+const Watcher = ({auth}) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -65,6 +69,8 @@ export default function Watcher() {
       password: data.get('password'),
     });
   };
+
+  if(auth && auth.level != 2) return <Navigate to="/loginuser" />;
 
   return (
     <ThemeProvider theme={theme}>
@@ -78,123 +84,20 @@ export default function Watcher() {
             alignItems: 'center',
           }}
         >
-            <Grid container sx={{display: 'flex', justifyContent: 'space-evenly', flexGrow: 1}}>
-                <Button href="#" variant="outlined" sx={{mt: 1}} startIcon={<FavoriteBorderIcon />}>
-                  Add to favourite
-                </Button>
-            </Grid>
-            <Grid container spacing={2} sx={{flexGrow: 1, mt: 1}}>
-              <Grid style={{ position: "relative" }} item md={8} sm={12} xs={12} sx={{mt: 1}}>
-                    <video width="100%" style={{ border: "solid" }}></video>
-                  {/* <Grid style={{ position: "absolute", bottom: "0" }} container sx={{display: 'flex', justifyContent: 'space-evenly', flexGrow: 1}} spacing={1}> */}
-                  
-          
-          
-                  <Grid style={{ position: "absolute", bottom: "0" }} container sx={{display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start'}} spacing={1}>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <CardGiftcardIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <PresentIcon />
-                    </IconButton>
-                  </Grid>
-              </Grid>
-              <Grid style={{ position: "relative" }} item md={4} sm={12} xs={12} sx={{mt: 1}}>
-                <Grid style={{ height: "75%", overFlowX: "hidden", overflowY: "auto" }} container  sx={{flexGrow: 1}}>
-                  <ListItem style={{ height: "fit-content" }}>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/avatar/avatar1.png" />
-                    </ListItemAvatar>
-                    <ListItemText fullWidth primary="James" secondary="I'll be in your neighborhood doing errands this"/>
-                  </ListItem>
-                </Grid>
-                <Grid style={{ position: "absolute", bottom: "0" }} container sx={{flexGrow: 1}} spacing={1}>
-                  <Grid item  md={10} sm={10} xs={10}>
-                    <Input fullWidth placeholder="Send Message" inputProps={ariaLabel}/>
-                  </Grid>
-                  <Grid item  md={2} sm={2} xs={2}>
-                    <IconButton color="primary" aria-label="add to shopping cart">
-                      <SendIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Grid>
-              
+            <WatcherVideoChat />
+            <Grid container sx={{display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start', mt: 3}} spacing={1} md={12} sm={12} xs={12}>
+              <IconButton color="primary" aria-label="add to shopping cart">
+                <CardGiftcardIcon />
+              </IconButton>
+              <IconButton color="primary" aria-label="add to shopping cart">
+                <CardGiftcardIcon />
+              </IconButton>
+              <IconButton color="primary" aria-label="add to shopping cart">
+                <CardGiftcardIcon />
+              </IconButton>
+              <IconButton color="primary" aria-label="add to shopping cart">
+                <PresentIcon />
+              </IconButton>
             </Grid>
             <Grid container spacing={2} sx={{flexGrow: 1, mt: 8}} item md={8} sm={12} xs={12}>
                <List>
@@ -354,3 +257,13 @@ const itemData = [
     cols: 2,
   },
 ];
+
+Watcher.propTypes = {
+  auth: PropTypes.object
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Watcher);

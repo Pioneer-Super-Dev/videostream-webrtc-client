@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import { Link as Linkin } from 'react-router-dom';
+import { useNavigate  } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import {logout} from '../../actions/auth';
 
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -33,6 +35,16 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import Tooltip from '@mui/material/Tooltip';
+import PersonAdd from '@mui/icons-material/PersonAdd';
+import Settings from '@mui/icons-material/Settings';
+import Logout from '@mui/icons-material/Logout';
+import Avatar from '@mui/material/Avatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+
+import './Navbar.css'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -77,31 +89,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-const Navbar = () => {
+const Navbar = ({user, isAuthenticated, level, logout}) => {
+
+  const navigate  = useNavigate();
+
+  /////////////////////RESPONSIVE MOBILE TOOLBAR LOGIN USER. LOGIN STREAMER, SIGN UP USER, SIGN UP STREAMER///////////////////////////////
   const [mobileMoreAnchorEl1, setMobileMoreAnchorEl1] = React.useState(null);
-  const [mobileMoreAnchorEl2, setMobileMoreAnchorEl2] = React.useState(null);
-
   const isMobileMenuOpen1 = Boolean(mobileMoreAnchorEl1);
-  const isMobileMenuOpen2 = Boolean(mobileMoreAnchorEl2);
-
   const handleMobileMenuClose1 = () => {
     setMobileMoreAnchorEl1(null);
   };
-  const handleMobileMenuClose2 = () => {
-    setMobileMoreAnchorEl2(null);
-  };
-
-
   const handleMobileMenuOpen1 = (event) => {
     setMobileMoreAnchorEl1(event.currentTarget);
   };
-  const handleMobileMenuOpen2 = (event) => {
-    setMobileMoreAnchorEl2(event.currentTarget);
-  };
-
   const mobileMenuId1 = 'primary-search-account-menu-mobile1';
-  const mobileMenuId2 = 'primary-search-account-menu-mobile2';
-
   const renderMobileMenu1 = (
     <Menu
       anchorEl={mobileMoreAnchorEl1}
@@ -119,24 +120,44 @@ const Navbar = () => {
       onClose={handleMobileMenuClose1}
     >
       <MenuItem>
-          <Button href="/loginuser" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+        <Linkin className="linkin" to="/loginuser">
+          <Button variant="outlined" sx={{ my: 1, mx: 1.5 }}>
               Login User
           </Button>
-          <Button href="/loginstreamer" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+        </Linkin>
+        <Linkin className="linkin" to="/loginstreamer">
+          <Button variant="outlined" sx={{ my: 1, mx: 1.5 }}>
                 Login Streamer
           </Button>
+        </Linkin>
       </MenuItem>  
       <MenuItem>
+        <Linkin className="linkin" to="/signupuser">
           <Button href="/signupuser" variant="contained" sx={{ my: 1, mx: 1.5 }}>
             Sign Up User
           </Button>
+        </Linkin>
+        <Linkin className="linkin" to="/signupstreamer">
           <Button href="/signupstreamer" variant="contained" sx={{ my: 1, mx: 1.5 }}>
             Sign Up Streamer
           </Button>
+        </Linkin>
       </MenuItem>
       
     </Menu>
   );
+
+
+  /////////////////////RESPONSIVE MOBILE TOOLBAR HOME, GENDER1, GENDER2, ABOUT, SEARCH///////////////////////////////
+  const [mobileMoreAnchorEl2, setMobileMoreAnchorEl2] = React.useState(null);
+  const isMobileMenuOpen2 = Boolean(mobileMoreAnchorEl2);  
+  const handleMobileMenuClose2 = () => {
+    setMobileMoreAnchorEl2(null);
+  };
+  const handleMobileMenuOpen2 = (event) => {
+    setMobileMoreAnchorEl2(event.currentTarget);
+  };
+  const mobileMenuId2 = 'primary-search-account-menu-mobile2';
 
   const renderMobileMenu2 = (
     <Menu
@@ -155,17 +176,19 @@ const Navbar = () => {
       onClose={handleMobileMenuClose2}
     >
       <MenuItem>
-        <Link fullWidth variant="button" color="primary" href="/" sx={{ my: 1, mx: 1.5 }}>
+      <Linkin className="linkin" to="/">
+        <Link variant="button" color="primary" sx={{ my: 1, mx: 1.5 }}>
           Home
         </Link>
+      </Linkin>
       </MenuItem>  
       <MenuItem>
-        <Link fullWidth variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }}>
+        <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }}>
           Gender1
         </Link>
       </MenuItem>
       <MenuItem>
-        <Link fullWidth variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
+        <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
           Gender2
         </Link>
       </MenuItem>
@@ -184,14 +207,232 @@ const Navbar = () => {
           Contact Us
         </Link>
       </MenuItem>
-      
     </Menu>
+  );
+
+
+  /////////////////////DESKTOP TOOLBAR LOGIN USER. LOGIN STREAMER, SIGN UP USER, SIGN UP STREAMER///////////////////////////////
+  const renderDesktopMenu1 = (
+    <Toolbar sx={{ flexWrap: 'wrap' }}>
+      <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+        <Linkin className="linkin" to="/">
+          <img src="logo.svg" alt="logo" style={{width: 150, verticalAlign: 'text-top'}}/>
+        </Linkin>
+      </Typography>
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <Linkin className="linkin" to="/loginuser">
+          <Button variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+            Login User
+          </Button>
+        </Linkin>
+        <Linkin className="linkin" to="/loginstreamer">
+          <Button variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+            Login Streamer
+          </Button>
+        </Linkin>
+        <Linkin className="linkin" to="/signupuser">
+          <Button variant="contained" sx={{ my: 1, mx: 1.5 }}>
+            Sign Up User
+          </Button>
+        </Linkin>
+        <Linkin className="linkin" to="/signupstreamer">
+          <Button variant="contained" sx={{ my: 1, mx: 1.5 }}>
+            Sign Up Streamer
+          </Button>
+        </Linkin>
+      </Box>
+      <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+        <IconButton
+          size="large"
+          aria-label="show more"
+          aria-controls={mobileMenuId1}
+          aria-haspopup="true"
+          onClick={handleMobileMenuOpen1}
+          color="inherit"
+        >
+        <MenuIcon />
+        </IconButton>
+      </Box>
+      {renderMobileMenu1}
+    </Toolbar>
+  );
+
+  /////////////////////DESKTOP TOOLBAR HOME, GENDER1, GENDER2, ABOUT, SEARCH///////////////////////////////
+  const renderDesktopMenu2 = (
+    <Toolbar sx={{ flexWrap: 'wrap' }}>
+      <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+        <IconButton
+          size="large"
+          aria-label="show more"
+          aria-controls={mobileMenuId2}
+          aria-haspopup="true"
+          onClick={handleMobileMenuOpen2}
+          color="inherit"
+        >
+        <MenuIcon />
+        </IconButton>
+      </Box>
+      {renderMobileMenu2}
+      <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+          <nav>
+          <Linkin className="linkin" to="/">
+            <Link variant="button" color="primary" sx={{ my: 1, mx: 1.5 }} className='link'>
+              Home
+            </Link>
+          </Linkin>
+            <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} className='link'>
+              Gender1
+            </Link>
+            <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} className='link'>
+              Gender2
+            </Link>
+            <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} className='link'>
+              Gender3
+            </Link>
+            <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} className='link'>
+              About Us
+            </Link>
+            <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} className='link'>
+              Contact Us
+            </Link>
+          </nav>
+        </Typography>
+      </Box>
+      <Box sx={{ flexGrow: 1 }} />
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder="Search…"
+          inputProps={{ 'aria-label': 'search' }}
+        />
+      </Search>
+      <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }} startIcon={<SearchIcon />}>
+        Search
+      </Button>
+    </Toolbar>
+  );
+
+  /////////////////////DESKTOP TOOLBAR PROFILE, LOGOUT///////////////////////////////
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const uploadFile = () => {
+    console.log("Upload File");
+  };
+
+  const viewProfile = () => {
+  };
+
+  const userLogOut = () => {
+    logout();
+  };
+
+  const renderDesktopLogoutMenu1 = (
+    <Toolbar sx={{ flexWrap: 'wrap' }}>
+      <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+        <Linkin className="linkin" to="/">
+        <Link>
+          <img src="logo.svg" alt="logo" style={{width: 150, verticalAlign: 'text-top'}}/>
+        </Link>
+        </Linkin>
+      </Typography>
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ display: { md: 'flex' } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+          <Typography variant="h6" color="primary" mr={2}>Welcome</Typography>
+          <Typography variant="h6" mr={10}>{user? user.firstname + " " + user.lastname : 'Jhon'}</Typography>
+          <Tooltip title="Account settings">
+            <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
+              <Avatar sx={{ width: 32, height: 32 }} src={"http://" + window.location.hostname + ":5000/images/" + "avatar" + (1 + Math.floor(Math.random() * 4)) + ".png"} />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              '&:before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+          {
+              level==1?  (
+              <><MenuItem onClick={viewProfile}>
+                <ListItemIcon>
+                  <AccountCircleOutlinedIcon fontSize="small" />
+                </ListItemIcon>
+                Profile
+              </MenuItem><MenuItem onClick={uploadFile}>
+                  <ListItemIcon>
+                    <FileUploadOutlinedIcon fontSize="small" />
+                  </ListItemIcon>
+                  Upload Files
+              </MenuItem><Divider />
+              </>) : <></>
+          }
+          <MenuItem onClick = {userLogOut}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
+      </Box>
+      {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+        <IconButton
+          size="large"
+          aria-label="show more"
+          aria-controls={mobileMenuId1}
+          aria-haspopup="true"
+          onClick={handleMobileMenuOpen1}
+          color="inherit"
+        >
+        <MenuIcon />
+        </IconButton>
+      </Box>
+      {renderMobileMenu1} */}
+    </Toolbar>
   );
 
   return (
       <Fragment>
-
-        <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
+        {/* <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} /> */}
         <CssBaseline />
         <AppBar
           position="static"
@@ -199,98 +440,25 @@ const Navbar = () => {
           elevation={0}
           sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
         >
-          <Toolbar sx={{ flexWrap: 'wrap' }}>
-            <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-              <Link href="/">
-                <img src="logo.svg" alt="logo" style={{width: 150, verticalAlign: 'text-top'}}/>
-              </Link>
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button href="/loginuser" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-                Login User
-              </Button>
-              <Button href="/loginstreamer" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-                Login Streamer
-              </Button>
-              <Button href="/signupuser" variant="contained" sx={{ my: 1, mx: 1.5 }}>
-                Sign Up User
-              </Button>
-              <Button href="/signupstreamer" variant="contained" sx={{ my: 1, mx: 1.5 }}>
-                Sign Up Streamer
-              </Button>
-            </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId1}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen1}
-                color="inherit"
-              >
-              <MenuIcon />
-              </IconButton>
-            </Box>
-            {renderMobileMenu1}
-          </Toolbar>
+          {isAuthenticated ? renderDesktopLogoutMenu1 : renderDesktopMenu1}
           <Divider/>
-          <Toolbar sx={{ flexWrap: 'wrap' }}>
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId2}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen2}
-                color="inherit"
-              >
-              <MenuIcon />
-              </IconButton>
-            </Box>
-            {renderMobileMenu2}
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                <nav>
-                  <Link variant="button" color="primary" href="/" sx={{ my: 1, mx: 1.5 }}>
-                    Home
-                  </Link>
-                  <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }}>
-                    Gender1
-                  </Link>
-                  <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
-                    Gender2
-                  </Link>
-                  <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
-                    Gender3
-                  </Link>
-                  <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
-                    About Us
-                  </Link>
-                  <Link variant="button" color="text.primary" href="#" sx={{ my: 1, mx: 1.5 }} >
-                    Contact Us
-                  </Link>
-                </nav>
-              </Typography>
-            </Box>
-            <Box sx={{ flexGrow: 1 }} />
-            {/* <TextField id="outlined-basic" label="Search" variant="outlined" /> */}
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
-            <Button href="#" variant="outlined" sx={{ my: 1, mx: 1.5 }} startIcon={<SearchIcon />}>
-              Search
-            </Button>
-          </Toolbar>
+          {renderDesktopMenu2}
         </AppBar>
       </Fragment>
   );
 };
 
-export default Navbar;
+Navbar.propTypes = {
+  logout: PropTypes.func.isRequired,
+  user: PropTypes.object,
+  isAuthenticated: PropTypes.bool,
+  level: PropTypes.number
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  isAuthenticated: state.auth.isAuthenticated,
+  level: state.auth.level
+});
+
+export default connect(mapStateToProps, {logout})(Navbar);

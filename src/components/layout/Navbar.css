@@ -1,0 +1,12 @@
+.link:link {
+    text-decoration: none;
+    text-align: center;
+}
+
+.link:hover {
+    color: #2196f3;
+}
+
+.linkin:link {
+    text-decoration: none;
+}

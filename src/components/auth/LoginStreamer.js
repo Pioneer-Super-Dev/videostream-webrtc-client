@@ -17,6 +17,7 @@ import {Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginStreamer } from '../../actions/auth';
+import { Link as Linkin } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -126,7 +127,7 @@ const LoginStreamer = ({loginStreamer, isAuthenticated, level}) => {
             </Button> */}
             <Grid container>
               <Grid item xs>
-                <Link href="/signupuser" variant="body2">
+                <Link href="/signupstreamer" variant="body2">
                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
