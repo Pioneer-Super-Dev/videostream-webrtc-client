@@ -1,16 +1,18 @@
-import {React, Fragment} from 'react';
-import { Route, Routes } from 'react-router-dom';
-import LoginUser from '../auth/LoginUser';
-import LoginStreamer from '../auth/LoginStreamer';
-import SignupUser from '../auth/SignupUser';
-import SignupStreamer from '../auth/SignupStreamer';
-import Broadcaster from '../streaming/Broadcaster';
-import Watcher from '../streaming/Watcher';
-import Alert from '../layout/Alert';
-import PrivateRoute from './PrivateRoute';
-import NotFound from '../layout/NotFound';
+import { React, Fragment } from "react";
+import { Route, Routes } from "react-router-dom";
+import LoginUser from "../auth/LoginUser";
+import LoginStreamer from "../auth/LoginStreamer";
+import SignupUser from "../auth/SignupUser";
+import SignupStreamer from "../auth/SignupStreamer";
+import Broadcaster from "../streaming/Broadcaster";
+import Watcher from "../streaming/Watcher";
+import Alert from "../layout/Alert";
+import PrivateRoute from "./PrivateRoute";
+import NotFound from "../layout/NotFound";
+import Upload from "../layout/Upload";
+import Profile from "../layout/Profile";
 
-import { SnackbarProvider} from 'notistack';
+import { SnackbarProvider } from "notistack";
 import Slide from "@mui/material/Slide";
 
 const Routers = () => {
@@ -18,8 +20,8 @@ const Routers = () => {
     <Fragment>
       <SnackbarProvider
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         TransitionComponent={Slide}
         maxSnack={10}
@@ -29,13 +31,15 @@ const Routers = () => {
         <Alert />
       </SnackbarProvider>
       <Routes>
-        <Route path="loginuser" element={<LoginUser/>} />
-        <Route path="loginstreamer" element={<LoginStreamer/>} />
-        <Route path="signupuser" element={<SignupUser/>}/>
-        <Route path="signupstreamer" element={<SignupStreamer/>}/>
-        <Route path="broadcaster" element={<Broadcaster/>}/>
-        <Route path="watcher/:id" element={<Watcher/>}/>
-        <Route element={<NotFound/>}/>
+        <Route path="loginuser" element={<LoginUser />} />
+        <Route path="loginstreamer" element={<LoginStreamer />} />
+        <Route path="signupuser" element={<SignupUser />} />
+        <Route path="signupstreamer" element={<SignupStreamer />} />
+        <Route path="broadcaster" element={<Broadcaster />} />
+        <Route path="watcher/:id" element={<Watcher />} />
+        <Route path="upload" element={<Upload />} />
+        <Route path="profile" element={<Profile />} />
+        <Route element={<NotFound />} />
       </Routes>
     </Fragment>
   );

@@ -47,7 +47,7 @@ const BroadcasterVideoChat = ({user, setAlert, addBroadcaster}) => {
         
         socket.current = io("http://10.10.13.158:8000/", { transports : ['websocket'], reconnectionAttempts: 5 });
 
-        socket.current.emit('login', { name:"broadcaster", room:"room" }, error => {
+        socket.current.emit('login', { name:"broadcaster", room: user && user._id }, error => {
             if(error) console.log(error);
         });
 
@@ -67,11 +67,15 @@ const BroadcasterVideoChat = ({user, setAlert, addBroadcaster}) => {
                 setStream(stream);
                 if (userVideo.current) {
                     userVideo.current.srcObject = stream;
-                    socket.current.emit("broadcaster");
+                    socket.current.emit("broadcaster", {room: user && user._id});
                 }
 
+                console.log(navigator.mediaDevices.enumerateDevices());
+
                 addBroadcaster({id: user && user._id, profileImage: user && user.profileimage, name: user && user.firstname + user && user.lastname});
-            });
+            }).then(
+                
+            );
         }
         catch(err) {
             setAlert('Camera & Microphone Error', 'error');

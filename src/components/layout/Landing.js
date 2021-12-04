@@ -43,12 +43,14 @@ const Landing = ({broadcast}) => {
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-
-    setInterval( () =>
-      axios.get('api/broadcasters')
+    axios.get('api/broadcasters')
         .then((response) => setCards(response.data))
         .catch((err) => console.log(err))
-    , 1000)
+    // setInterval( () =>
+    //   axios.get('api/broadcasters')
+    //     .then((response) => setCards(response.data))
+    //     .catch((err) => console.log(err))
+    // , 1000)
   }, []);
 
   return (
@@ -59,7 +61,7 @@ const Landing = ({broadcast}) => {
           // <Grid item key={card} xs={12} sm={6} md={3}>
             <Grid item xs={12} sm={6} md={3}>
             {/* <Link href={"watcher"}> */}
-            <Link href={"watcher"} className='link'>
+            <Link href={`watcher/${card.streamer}`} className='link'>
               <Card sx={{ maxWidth: 345 }}>
                 <CardActionArea>
                   <CardMedia

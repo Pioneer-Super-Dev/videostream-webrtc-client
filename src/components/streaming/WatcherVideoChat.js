@@ -18,7 +18,7 @@ import io from "socket.io-client";
 const ariaLabel = { 'aria-label': 'description' };
 
 
-const WatcherVideoChat = () => {
+const WatcherVideoChat = ({roomid}) => {
 
     const socket = useRef();
     const [message, setMessage] = useState('')
@@ -42,7 +42,7 @@ const WatcherVideoChat = () => {
 
         socket.current = io.connect("http://10.10.13.158:8000/", { transports : ['websocket'], reconnectionAttempts: 5 });
 
-        socket.current.emit('login', { name:"watcher", room:"room" }, error => {
+        socket.current.emit('login', { name:"watcher", room: roomid }, error => {
             if(error) console.log(error);
         });
 
@@ -66,6 +66,7 @@ const WatcherVideoChat = () => {
               });
             peerConnection.ontrack = event => {
                 userVideo.current.srcObject = event.streams[0];
+                // peerConnection.ontrack.onunmute = () => console.log("Audio data arriving!");
             };
             peerConnection.onicecandidate = event => {
               if (event.candidate) {
@@ -81,11 +82,11 @@ const WatcherVideoChat = () => {
         });
           
         socket.current.on("connect", () => {
-            socket.current.emit("watcher");
+            socket.current.emit("watcher", roomid);
         });
           
         socket.current.on("broadcaster", () => {
-            socket.current.emit("watcher");
+            socket.current.emit("watcher", roomid);
         });
           
         window.onunload = window.onbeforeunload = () => {
