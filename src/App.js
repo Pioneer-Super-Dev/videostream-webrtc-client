@@ -18,8 +18,9 @@ import SignupStreamer from "./components/auth/SignupStreamer";
 import Broadcaster from "./components/streaming/Broadcaster";
 import Watcher from "./components/streaming/Watcher";
 import NotFound from "./components/layout/NotFound";
-import Upload from "./components/layout/Upload";
+import Uploader from "./components/layout/Uploader";
 import Profile from "./components/layout/Profile";
+import PaypalPayment from "./components/payment/PayPalPayment";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -53,8 +54,9 @@ function App() {
               <Route path="signupstreamer" element={<SignupStreamer />} />
               <Route path="broadcaster" element={<Broadcaster />} />
               <Route path="watcher/:id" element={<Watcher />} />
-              <Route path="upload" element={<Upload />} />
+              <Route path="upload" element={<Uploader />} />
               <Route path="Profile" element={<Profile />} />
+              <Route path="paypalpayment" element={<PaypalPayment />} />
               <Route element={<NotFound />} />
             </Route>
           </Routes>

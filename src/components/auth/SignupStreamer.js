@@ -154,6 +154,8 @@ const SignupStreamer = ({
     if (d.getDate() < 10) newDate += "0";
     newDate += d.getDate();
 
+    console.log(newValue);
+
     setValue(newValue);
     setFormData({ ...formData, birthday: newDate });
   };
@@ -186,7 +188,7 @@ const SignupStreamer = ({
   };
 
   if (isAuthenticated) {
-    //if(level == 1) return <Navigate to="/loginstreamer" />;
+    if (level == 1) return <Navigate to="/loginstreamer" />;
   }
 
   return (

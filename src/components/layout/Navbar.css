@@ -1,12 +1,13 @@
 .link:link {
-    text-decoration: none;
-    text-align: center;
+  text-decoration: none;
+  text-align: center;
+  color: #3f3e3e;
 }
 
 .link:hover {
-    color: #2196f3;
+  color: #2196f3;
 }
 
 .linkin:link {
-    text-decoration: none;
+  text-decoration: none;
 }

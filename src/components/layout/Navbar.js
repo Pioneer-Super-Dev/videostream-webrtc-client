@@ -43,6 +43,8 @@ import Avatar from "@mui/material/Avatar";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
+
 import axios from "axios";
 
 import "./Navbar.css";
@@ -436,14 +438,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
             <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
               <Avatar
                 sx={{ width: 32, height: 32 }}
-                src={
-                  "http://" +
-                  window.location.hostname +
-                  ":5000/images/" +
-                  "avatar" +
-                  (1 + Math.floor(Math.random() * 4)) +
-                  ".png"
-                }
+                src={"http://10.10.13.158:5000/images/" + "avatar3.png"}
               />
             </IconButton>
           </Tooltip>
@@ -484,18 +479,31 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
         >
           {level == 1 ? (
             <>
-              <MenuItem onClick={viewProfile}>
-                <ListItemIcon>
-                  <AccountCircleOutlinedIcon fontSize="small" />
-                </ListItemIcon>
-                <Linkin to="/profile">Profile</Linkin>
-              </MenuItem>
-              <MenuItem onClick={uploadFile}>
-                <ListItemIcon>
-                  <FileUploadOutlinedIcon fontSize="small" />
-                </ListItemIcon>
-                <Linkin to="/upload">Upload Files</Linkin>
-              </MenuItem>
+              <Linkin className="link" to="/profile">
+                <MenuItem onClick={viewProfile}>
+                  <ListItemIcon>
+                    <AccountCircleOutlinedIcon fontSize="small" />
+                  </ListItemIcon>
+                  Profile
+                </MenuItem>
+              </Linkin>
+              <Linkin className="link" to="/upload">
+                <MenuItem onClick={uploadFile}>
+                  <ListItemIcon>
+                    <FileUploadOutlinedIcon fontSize="small" />
+                  </ListItemIcon>
+                  Upload Files
+                </MenuItem>
+              </Linkin>
+              <Divider />
+              <Linkin className="link" to="/broadcaster">
+                <MenuItem onClick={viewProfile}>
+                  <ListItemIcon>
+                    <PodcastsOutlinedIcon fontSize="small" />
+                  </ListItemIcon>
+                  Broadcasting
+                </MenuItem>
+              </Linkin>
               <Divider />
             </>
           ) : (
