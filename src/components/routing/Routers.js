@@ -8,7 +8,7 @@ import Broadcaster from "../streaming/Broadcaster";
 import Watcher from "../streaming/Watcher";
 import Alert from "../layout/Alert";
 import PrivateRoute from "./PrivateRoute";
-import NotFound from "../layout/NotFound";
+import { NotFound } from "../layout/NotFound";
 import Uploader from "../layout/Uploader";
 import Profile from "../layout/Profile";
 import PaypalPayment from "../payment/PayPalPayment";

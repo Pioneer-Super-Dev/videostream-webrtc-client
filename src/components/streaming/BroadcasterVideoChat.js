@@ -18,6 +18,7 @@ import Peer from "simple-peer";
 import { addBroadcaster } from "../../actions/broadcast";
 import axios from "axios";
 import Grow from "@mui/material/Grow";
+import Constants from "../../constants/Constants";
 
 const ariaLabel = { "aria-label": "description" };
 
@@ -44,7 +45,7 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
   };
 
   useEffect(() => {
-    socket.current = io("http://10.10.13.158:8000/", {
+    socket.current = io(`${Constants.USER_SERVER_SOCKET_IO_URL}`, {
       transports: ["websocket"],
       reconnectionAttempts: 5,
     });
@@ -78,15 +79,16 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
             socket.current.emit("broadcaster", { room: user && user._id });
           }
 
-          console.log(navigator.mediaDevices.enumerateDevices());
-
           addBroadcaster({
             id: user && user._id,
             profileImage: user && user.profileimage,
             name: user && user.firstname + user && user.lastname,
           });
         })
-        .then();
+        .catch((error) => {
+          console.log(error);
+          setAlert("Getting Media Error", "error");
+        });
     } catch (err) {
       setAlert("Camera & Microphone Error", "error");
       console.log(err);
@@ -97,26 +99,30 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
     });
 
     socket.current.on("watcher", (id) => {
-      const peerConnection = new RTCPeerConnection(config);
-      peerConnections[id] = peerConnection;
+      try {
+        const peerConnection = new RTCPeerConnection(config);
+        peerConnections[id] = peerConnection;
 
-      let stream1 = userVideo.current.srcObject;
-      stream1
-        .getTracks()
-        .forEach((track) => peerConnection.addTrack(track, stream1));
+        let stream1 = userVideo.current.srcObject;
+        stream1
+          .getTracks()
+          .forEach((track) => peerConnection.addTrack(track, stream1));
 
-      peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-          socket.current.emit("candidate", id, event.candidate);
-        }
-      };
+        peerConnection.onicecandidate = (event) => {
+          if (event.candidate) {
+            socket.current.emit("candidate", id, event.candidate);
+          }
+        };
 
-      peerConnection
-        .createOffer()
-        .then((sdp) => peerConnection.setLocalDescription(sdp))
-        .then(() => {
-          socket.current.emit("offer", id, peerConnection.localDescription);
-        });
+        peerConnection
+          .createOffer()
+          .then((sdp) => peerConnection.setLocalDescription(sdp))
+          .then(() => {
+            socket.current.emit("offer", id, peerConnection.localDescription);
+          });
+      } catch (e) {
+        console.log(e);
+      }
     });
 
     socket.current.on("answer", (id, description) => {
@@ -128,8 +134,12 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
     });
 
     socket.current.on("disconnectPeer", (id) => {
-      peerConnections[id].close();
-      delete peerConnections[id];
+      try {
+        peerConnections[id].close();
+        delete peerConnections[id];
+      } catch (e) {
+        console.log(e);
+      }
     });
 
     window.onunload = window.onbeforeunload = () => {
@@ -149,7 +159,7 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
         })
         .then((response) => console.log(response))
         .catch((err) => console.log(err));
-  }, []);
+  }, [user]);
 
   let UserVideo;
 
@@ -171,7 +181,11 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
   }
 
   const handleBroadcast = () => {
-    stream.getVideoTracks()[0].enabled = true;
+    try {
+      stream.getVideoTracks()[0].enabled = true;
+    } catch (err) {
+      console.log(err);
+    }
 
     axios
       .post("api/broadcasters", {

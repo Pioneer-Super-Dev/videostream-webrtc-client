@@ -47,15 +47,18 @@ const Landing = ({ broadcast }) => {
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    axios
-      .get("api/broadcasters")
-      .then((response) => setCards(response.data))
-      .catch((err) => console.log(err));
-    // setInterval( () =>
-    //   axios.get('api/broadcasters')
-    //     .then((response) => setCards(response.data))
-    //     .catch((err) => console.log(err))
-    // , 1000)
+    // axios
+    //   .get("api/broadcasters")
+    //   .then((response) => setCards(response.data))
+    //   .catch((err) => console.log(err));
+    setInterval(
+      () =>
+        axios
+          .get("api/broadcasters")
+          .then((response) => setCards(response.data))
+          .catch((err) => {}),
+      3000
+    );
   }, []);
 
   return (

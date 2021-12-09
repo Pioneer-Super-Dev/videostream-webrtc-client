@@ -17,7 +17,7 @@ import SignupUser from "./components/auth/SignupUser";
 import SignupStreamer from "./components/auth/SignupStreamer";
 import Broadcaster from "./components/streaming/Broadcaster";
 import Watcher from "./components/streaming/Watcher";
-import NotFound from "./components/layout/NotFound";
+import { NotFound } from "./components/layout/NotFound";
 import Uploader from "./components/layout/Uploader";
 import Profile from "./components/layout/Profile";
 import PaypalPayment from "./components/payment/PayPalPayment";
@@ -57,8 +57,8 @@ function App() {
               <Route path="upload" element={<Uploader />} />
               <Route path="Profile" element={<Profile />} />
               <Route path="paypalpayment" element={<PaypalPayment />} />
-              <Route element={<NotFound />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Fragment>
       </Router>

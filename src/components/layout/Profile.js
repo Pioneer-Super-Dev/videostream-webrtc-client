@@ -29,6 +29,8 @@ import PropTypes from "prop-types";
 import Grow from "@mui/material/Grow";
 import Fade from "@mui/material/Fade";
 import Zoom from "@mui/material/Zoom";
+import Constants from "../../constants/Constants";
+import { setAlert } from "../../actions/alert";
 
 const ImageThumb = ({ image }) => {
   if (image.name) {
@@ -42,7 +44,7 @@ const ImageThumb = ({ image }) => {
   } else
     return (
       <Avatar
-        src={`http://localhost:5000/images/${image}`}
+        src={`${Constants.USER_SERVER_URL}/images/${image}`}
         sx={{ width: 200, height: 200, border: 1, borderColor: "primary" }}
       />
     );
@@ -52,7 +54,7 @@ const Input = styled("input")({
   display: "none",
 });
 
-function Profile({ user }) {
+function Profile({ user, setAlert }) {
   const [file, setFile] = React.useState("");
   const [gender1, setGender] = React.useState("");
   const [genders, setGenders] = React.useState([]);
@@ -61,7 +63,7 @@ function Profile({ user }) {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:5000/api/setting/menu")
+      .get(`${Constants.USER_SERVER_URL}/api/setting/menu`)
       .then((response) => {
         setGenders(response.data.genders);
       })
@@ -110,12 +112,12 @@ function Profile({ user }) {
     e.preventDefault();
 
     axios
-      .post(`http://localhost:5000/api/streamers/profile/${user._id}`, {
+      .post(`${Constants.USER_SERVER_URL}/api/streamers/profile/${user._id}`, {
         profileimage: file,
         gender: gender1,
         biography: biography,
       })
-      .then((response) => {})
+      .then((response) => setAlert("Saved successfully", "success"))
       .catch((err) => console.log(err));
   };
 
@@ -152,7 +154,7 @@ function Profile({ user }) {
                     <ImageThumb image={file} />
                   ) : (
                     <Avatar
-                      src="http://localhost:5000/images/avatar1.png"
+                      src={`${Constants.USER_SERVER_URL}:5000/images/avatar1.png`}
                       sx={{
                         width: 200,
                         height: 200,
@@ -218,7 +220,7 @@ function Profile({ user }) {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Register
+              Save
             </Button>
           </Box>
         </Box>
@@ -229,10 +231,11 @@ function Profile({ user }) {
 
 Profile.propTypes = {
   user: PropTypes.object.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, { setAlert })(Profile);

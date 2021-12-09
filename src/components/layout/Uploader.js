@@ -61,6 +61,7 @@ import Input from "@mui/material/Input";
 import axios from "axios";
 import Avatar from "@mui/material/Avatar";
 import CloudUploadRoundedIcon from "@mui/icons-material/CloudUploadRounded";
+import Constants from "../../constants/Constants";
 
 function Uploader({ user, setAlert }) {
   const [uploadingFile, setUploadingFile] = React.useState([]);
@@ -96,12 +97,15 @@ function Uploader({ user, setAlert }) {
 
   const handleAdd = () => {
     axios
-      .post(`http://localhost:5000/api/upload/fileadd/${user && user._id}`, {
-        name: fileName,
-        price: price,
-        title: title,
-        description: description,
-      })
+      .post(
+        `${Constants.USER_SERVER_URL}/api/upload/fileadd/${user && user._id}`,
+        {
+          name: fileName,
+          price: price,
+          title: title,
+          description: description,
+        }
+      )
       .then((response) => setAlert("Successfully Added", "success"))
       .catch(
         (errors) => setAlert("Add Error", "error")
@@ -154,7 +158,7 @@ function Uploader({ user, setAlert }) {
                   onProgress={handleUploadProgress}
                   onSuccess={handleUploadSuccess}
                   onError={handleUploadError}
-                  action={"http://localhost:5000/api/upload/file"}
+                  action={`${Constants.USER_SERVER_URL}/api/upload/file`}
                   method="post"
                 >
                   <LoadingButton

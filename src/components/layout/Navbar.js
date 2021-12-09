@@ -44,6 +44,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
+import Constants from "../../constants/Constants";
 
 import axios from "axios";
 
@@ -97,7 +98,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
 
   React.useEffect(() => {
     axios
-      .get("http://10.10.13.158:5000/api/setting/logo")
+      .get(`${Constants.USER_SERVER_URL}/api/setting/logo`)
       .then((response) => {
         setLogo(response.data.logo);
       })
@@ -107,7 +108,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
       );
 
     axios
-      .get("http://10.10.13.158:5000/api/setting/menu")
+      .get(`${Constants.USER_SERVER_URL}/api/setting/menu`)
       .then((response) => {
         setGenders(response.data.genders);
         // genders = response.data.genders;
@@ -260,7 +261,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
       <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
         <Linkin className="linkin" to="/">
           <img
-            src={`http://10.10.13.158:5000/logo/${logo}`}
+            src={`${Constants.USER_SERVER_URL}/logo/${logo}`}
             alt="logo"
             style={{ height: 60, verticalAlign: "text-top" }}
           />
@@ -416,7 +417,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
         <Linkin className="linkin" to="/">
           {/* <Link> */}
           <img
-            src={`http://10.10.13.158:5000/logo/${logo}`}
+            src={`${Constants.USER_SERVER_URL}/logo/${logo}`}
             alt="logo"
             style={{ width: 150, verticalAlign: "text-top" }}
           />
@@ -438,7 +439,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
             <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
               <Avatar
                 sx={{ width: 32, height: 32 }}
-                src={"http://10.10.13.158:5000/images/" + "avatar3.png"}
+                src={`${Constants.USER_SERVER_URL}/images/avatar3.png`}
               />
             </IconButton>
           </Tooltip>
@@ -509,12 +510,14 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
           ) : (
             <></>
           )}
-          <MenuItem onClick={userLogOut}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
+          <Linkin className="link" to="/">
+            <MenuItem onClick={userLogOut}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </Linkin>
         </Menu>
       </Box>
       {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
