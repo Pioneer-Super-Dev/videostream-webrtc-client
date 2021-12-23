@@ -35,6 +35,11 @@ import PresentIcon from "@mui/icons-material/PresentToAll";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import Constants from "../../constants/Constants";
+import StripePayment from "../payment/StripePayment";
+import ShopIcon from "@mui/icons-material/Shop";
+import { useNavigate } from "react-router-dom";
 
 const ariaLabel = { "aria-label": "description" };
 
@@ -68,6 +73,59 @@ const theme = createTheme();
 const Watcher = ({ auth }) => {
   const params = useParams();
 
+  const navigate = useNavigate();
+
+  const [itemData, setItemData] = React.useState([
+    {
+      _id: "61bdcfcbb585fbca8f65fbd0",
+      streamer: "61addc0d0ca8c27b321b9b54",
+      name: "",
+      title: "",
+      price: "",
+      description: "",
+    },
+  ]);
+  const [paid, setPaid] = React.useState([]);
+
+  const [flag, setFlag] = React.useState(false);
+
+  React.useEffect(async () => {
+    await axios
+      .get(`${Constants.USER_SERVER_URL}/api/upload/fileadd/${params.id}`)
+      .then((response) => {
+        console.log(response.data);
+        setItemData(response.data);
+      })
+      .catch((err) => console.log(err));
+
+    itemData.forEach(async (item, index) => {
+      await axios
+        .get(
+          `${Constants.USER_SERVER_URL}/api/videopay/${params.id}/${
+            auth.user && auth.user._id
+          }/${item._id}`
+        )
+        .then((response) => {
+          let temp = paid;
+          temp.push(response.data.paid);
+          setPaid(temp);
+          console.log(response.data.paid);
+        })
+        .catch((err) => console.log(err));
+    });
+    // await axios
+    //   .get(
+    //     `${Constants.USER_SERVER_URL}/api/detailedpay/${params.id}/${
+    //       auth.user && auth.user._id
+    //     }`
+    //   )
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     setItemData(response.data);
+    //   })
+    //   .catch((err) => console.log(err));
+  }, [auth.user]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -78,8 +136,40 @@ const Watcher = ({ auth }) => {
     });
   };
 
-  console.log(params.id);
+  const onBuy = (event) => {
+    console.log("BUY");
+    const key = event.target.dataset.key;
 
+    console.log(itemData[key]._id);
+
+    navigate(
+      `/stripepayment/${params.id}/${auth.user && auth.user._id}/${
+        itemData[key]._id
+      }/${itemData[key].price}`
+    );
+
+    axios
+      .post(`${Constants.USER_SERVER_URL}/api/payment`, {
+        from: auth.user && auth.user._id,
+        to: params.id,
+        amount: itemData[key].price,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => console.log(err));
+
+    axios
+      .post(`${Constants.USER_SERVER_URL}/api/videopay`, {
+        streamer: params.id,
+        watcher: auth.user && auth.user._id,
+        video: itemData[key]._id,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => console.log(err));
+  };
   // if(auth && auth.level != 2) return <Navigate to="/loginuser" />;
 
   return (
@@ -158,42 +248,56 @@ const Watcher = ({ auth }) => {
           </Grid>
 
           <Grid container spacing={2} sx={{ flexGrow: 1, mt: 1 }}>
-            {/* <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                  <Item>md=8 sm=12</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>md=2 sm=6</Item>
-              </Grid> */}
-            {itemData.map((item) => (
-              <Grid item md={3} sm={6} xs={12} fullWidth>
-                <ImageListItem key={item.img}>
-                  <img
-                    src={`${item.img}?w=248&fit=crop&auto=format`}
-                    srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                    alt={item.title}
-                    loading="lazy"
-                  />
-                  <ImageListItemBar
+            {itemData.map((item, index) => (
+              <Grid
+                item
+                md={3}
+                sm={6}
+                xs={12}
+                fullWidth
+                style={{ margin: "auto" }}
+              >
+                {paid[index] == 1 ? (
+                  <></>
+                ) : (
+                  <Button
+                    data-key={index}
+                    variant="outlined"
+                    sx={{ mb: 2 }}
+                    startIcon={<ShopIcon />}
+                    onClick={onBuy}
+                  >
+                    BUY ${item.price}
+                  </Button>
+                )}
+                <ImageListItem
+                  key={item.name}
+                  style={{
+                    border: "solid",
+                    filter: paid[index] ? "" : "blur(10px)",
+                  }}
+                >
+                  {item.name.endsWith("mp4") ? (
+                    <video width="100%" height="100%">
+                      <source
+                        src={`${Constants.USER_SERVER_URL}/upload/${item.name}`}
+                        type="video/mp4"
+                      />
+                    </video>
+                  ) : (
+                    <img
+                      disabled="false"
+                      width="100%"
+                      height="100%"
+                      src={`${Constants.USER_SERVER_URL}/upload/${item.name}`}
+                      srcSet={``}
+                      alt={item.title}
+                      loading="lazy"
+                    />
+                  )}
+                  {/* <ImageListItemBar
                     title={item.title}
-                    subtitle={item.author}
+                    subtitle={item.description}
                     actionIcon={
                       <IconButton
                         sx={{ color: "rgba(255, 255, 255, 0.54)" }}
@@ -202,7 +306,7 @@ const Watcher = ({ auth }) => {
                         <InfoIcon />
                       </IconButton>
                     }
-                  />
+                  /> */}
                 </ImageListItem>
               </Grid>
             ))}
@@ -213,80 +317,6 @@ const Watcher = ({ auth }) => {
     </ThemeProvider>
   );
 };
-
-const itemData = [
-  {
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-    title: "Breakfast",
-    author: "@bkristastucchio",
-    rows: 2,
-    cols: 2,
-    featured: true,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-    title: "Burger",
-    author: "@rollelflex_graphy726",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-    title: "Camera",
-    author: "@helloimnik",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-    title: "Coffee",
-    author: "@nolanissac",
-    cols: 2,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-    title: "Hats",
-    author: "@hjrc33",
-    cols: 2,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
-    title: "Honey",
-    author: "@arwinneil",
-    rows: 2,
-    cols: 2,
-    featured: true,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
-    title: "Basketball",
-    author: "@tjdragotta",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
-    title: "Fern",
-    author: "@katie_wasserman",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
-    title: "Mushrooms",
-    author: "@silverdalex",
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
-    title: "Tomato basil",
-    author: "@shelleypauls",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
-    title: "Sea star",
-    author: "@peterlaster",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
-    title: "Bike",
-    author: "@southside_customs",
-    cols: 2,
-  },
-];
 
 Watcher.propTypes = {
   auth: PropTypes.object,

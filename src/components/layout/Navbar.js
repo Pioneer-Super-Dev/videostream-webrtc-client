@@ -45,6 +45,7 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
 import Constants from "../../constants/Constants";
+import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 
 import axios from "axios";
 
@@ -102,22 +103,14 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
       .then((response) => {
         setLogo(response.data.logo);
       })
-      .catch((err) =>
-        // setAlert('Choose Proper Image', 'danger')
-        console.log(err)
-      );
+      .catch((err) => console.log(err));
 
     axios
       .get(`${Constants.USER_SERVER_URL}/api/setting/menu`)
       .then((response) => {
         setGenders(response.data.genders);
-        // genders = response.data.genders;
-        // console.log(`GENDERS ${genders}`);
       })
-      .catch((err) =>
-        // setAlert('Choose Proper Image', 'danger')
-        console.log(err)
-      );
+      .catch((err) => console.log(err));
   }, []);
 
   const navigate = useNavigate();
@@ -224,7 +217,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
               <Link
                 variant="button"
                 color="text.primary"
-                href="#"
+                href={`/${gender}`}
                 sx={{ my: 1, mx: 1.5 }}
               >
                 {gender}
@@ -239,7 +232,9 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
           href="#"
           sx={{ my: 1, mx: 1.5 }}
         >
-          About Us
+          <Linkin className="link" to="/aboutus">
+            About Us
+          </Linkin>
         </Link>
       </MenuItem>
       <MenuItem>
@@ -249,7 +244,9 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
           href="#"
           sx={{ my: 1, mx: 1.5 }}
         >
-          Contact Us
+          <Linkin className="link" to="/contactus">
+            Contact Us
+          </Linkin>
         </Link>
       </MenuItem>
     </Menu>
@@ -341,7 +338,7 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
                   <Link
                     variant="button"
                     color="text.primary"
-                    href="#"
+                    href={`/${gender}`}
                     sx={{ my: 1, mx: 1.5 }}
                     className="link"
                   >
@@ -356,7 +353,9 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
               sx={{ my: 1, mx: 1.5 }}
               className="link"
             >
-              About Us
+              <Linkin className="link" to="/aboutus">
+                About Us
+              </Linkin>
             </Link>
             <Link
               variant="button"
@@ -365,7 +364,9 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
               sx={{ my: 1, mx: 1.5 }}
               className="link"
             >
-              Contact Us
+              <Linkin className="link" to="/contactus">
+                Contact Us
+              </Linkin>
             </Link>
           </nav>
         </Typography>
@@ -409,6 +410,10 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
 
   const userLogOut = () => {
     logout();
+    axios
+      .delete(`api/broadcasters/${user._id}`)
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
   };
 
   const renderDesktopLogoutMenu1 = (
@@ -510,6 +515,15 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
           ) : (
             <></>
           )}
+          <Linkin className="link" to="/stripepayment">
+            <MenuItem>
+              <ListItemIcon>
+                <PaymentsOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              Payment
+            </MenuItem>
+          </Linkin>
+          <Divider />
           <Linkin className="link" to="/">
             <MenuItem onClick={userLogOut}>
               <ListItemIcon>
@@ -520,25 +534,11 @@ const Navbar = ({ user, isAuthenticated, level, logout }) => {
           </Linkin>
         </Menu>
       </Box>
-      {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-        <IconButton
-          size="large"
-          aria-label="show more"
-          aria-controls={mobileMenuId1}
-          aria-haspopup="true"
-          onClick={handleMobileMenuOpen1}
-          color="inherit"
-        >
-        <MenuIcon />
-        </IconButton>
-      </Box>
-      {renderMobileMenu1} */}
     </Toolbar>
   );
 
   return (
     <Fragment>
-      {/* <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} /> */}
       <CssBaseline />
       <AppBar
         position="static"

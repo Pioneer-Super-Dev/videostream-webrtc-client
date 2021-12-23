@@ -21,6 +21,10 @@ import { NotFound } from "./components/layout/NotFound";
 import Uploader from "./components/layout/Uploader";
 import Profile from "./components/layout/Profile";
 import PaypalPayment from "./components/payment/PayPalPayment";
+import StripePayment from "./components/payment/StripePayment";
+import AboutUs from "./components/layout/AboutUs";
+import ContactUs from "./components/layout/ContactUs";
+import GenderLanding from "./components/layout/GenderLanding";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -47,6 +51,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/:gender" element={<GenderLanding />} />
             <Route path="/" element={<Routers />}>
               <Route path="loginuser" element={<LoginUser />} />
               <Route path="loginstreamer" element={<LoginStreamer />} />
@@ -57,6 +62,12 @@ function App() {
               <Route path="upload" element={<Uploader />} />
               <Route path="Profile" element={<Profile />} />
               <Route path="paypalpayment" element={<PaypalPayment />} />
+              <Route
+                path="stripepayment/:streamerid/:watcherid/:videoid/:price"
+                element={<StripePayment />}
+              />
+              <Route path="aboutus" element={<AboutUs />} />
+              <Route path="contactus" element={<ContactUs />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

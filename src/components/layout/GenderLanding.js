@@ -19,9 +19,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CircleArrow as ScrollUpButton } from "react-scroll-up-button";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import "./Landing.css";
+import "./GenderLanding.css";
 import axios from "axios";
 import Grow from "@mui/material/Grow";
+import { useParams } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -41,14 +42,16 @@ function Copyright(props) {
   );
 }
 
-const Landing = ({ broadcast }) => {
+const GenderLanding = ({ broadcast }) => {
   //const [cards, setCards] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 , 48, 49, 50, 51, 52, 53]);
 
   const [cards, setCards] = React.useState([]);
 
+  const params = useParams();
+
   React.useEffect(() => {
     axios
-      .get("api/broadcasters")
+      .get(`api/broadcasters/${params.gender}`)
       .then((response) => setCards(response.data))
       .catch((err) => console.log(err));
     // setInterval(
@@ -66,7 +69,7 @@ const Landing = ({ broadcast }) => {
       {/* End hero unit */}
       <Grid container justifyContent="center">
         <Typography variant="h3" gutterBottom component="div">
-          BROADCASTERS
+          {params.gender.toUpperCase()} BROADCASTERS
         </Typography>
       </Grid>
       <Grid container spacing={4}>
@@ -108,7 +111,7 @@ const Landing = ({ broadcast }) => {
   );
 };
 
-Landing.propTypes = {
+GenderLanding.propTypes = {
   broadcast: PropTypes.array,
 };
 
@@ -116,4 +119,4 @@ const mapStateToProps = (state) => ({
   broadcast: state.broadcast,
 });
 
-export default connect(mapStateToProps)(Landing);
+export default connect(mapStateToProps)(GenderLanding);

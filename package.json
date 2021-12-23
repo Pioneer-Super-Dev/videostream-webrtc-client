@@ -13,6 +13,8 @@
     "@mui/icons-material": "^5.1.1",
     "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "^5.1.1",
+    "@stripe/react-stripe-js": "^1.6.0",
+    "@stripe/stripe-js": "^1.21.2",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -37,6 +39,7 @@
     "simple-peer": "^9.11.0",
     "socket.io-client": "^4.4.0",
     "three": "^0.133.1",
+    "use-elapsed-time": "^3.0.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -63,5 +66,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://192.168.10.113:5000"
+  "proxy": "https://10.10.13.158:5000"
 }

@@ -12,6 +12,9 @@ import { NotFound } from "../layout/NotFound";
 import Uploader from "../layout/Uploader";
 import Profile from "../layout/Profile";
 import PaypalPayment from "../payment/PayPalPayment";
+import StripePayment from "../payment/StripePayment";
+import AboutUs from "../layout/AboutUs";
+import ContactUs from "../layout/ContactUs";
 
 import { SnackbarProvider } from "notistack";
 import Slide from "@mui/material/Slide";
@@ -41,6 +44,12 @@ const Routers = () => {
         <Route path="upload" element={<Uploader />} />
         <Route path="profile" element={<Profile />} />
         <Route path="paypalpayment" element={<PaypalPayment />} />
+        <Route
+          path="stripepayment/:streamerid/:watcherid/:videoid/:price"
+          element={<StripePayment />}
+        />
+        <Route path="aboutus" element={<AboutUs />} />
+        <Route path="contactus" element={<ContactUs />} />
         <Route element={<NotFound />} />
       </Routes>
     </Fragment>

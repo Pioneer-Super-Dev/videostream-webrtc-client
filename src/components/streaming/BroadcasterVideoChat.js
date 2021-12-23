@@ -26,6 +26,7 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
   const [stream, setStream] = useState();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [broadcastingState, setBroadcastingState] = useState(true);
   const userVideo = useRef();
   const socket = useRef();
   const chatboxRef = useRef(null);
@@ -44,7 +45,7 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
     setMessage("");
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     socket.current = io(`${Constants.USER_SERVER_SOCKET_IO_URL}`, {
       transports: ["websocket"],
       reconnectionAttempts: 5,
@@ -68,31 +69,46 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
 
     socket.current.on("notification", (msg) => {});
 
-    //SHOW CAMERA ON MY SCREEN
-    try {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          setStream(stream);
-          if (userVideo.current) {
-            userVideo.current.srcObject = stream;
-            socket.current.emit("broadcaster", { room: user && user._id });
-          }
+    await axios
+      .get(`api/broadcasters/${user && user._id}`)
+      .then((response) => {
+        //SHOW CAMERA ON MY SCREEN
+        try {
+          navigator.mediaDevices
+            .getUserMedia({ video: true, audio: true })
+            .then((stream) => {
+              setStream(stream);
+              if (response.data == "running") {
+                stream.getVideoTracks()[0].enabled = true;
+                setBroadcastingState(false);
+              } else {
+                stream.getVideoTracks()[0].enabled = false;
+                setBroadcastingState(true);
+              }
 
-          addBroadcaster({
-            id: user && user._id,
-            profileImage: user && user.profileimage,
-            name: user && user.firstname + user && user.lastname,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          setAlert("Getting Media Error", "error");
-        });
-    } catch (err) {
-      setAlert("Camera & Microphone Error", "error");
-      console.log(err);
-    }
+              if (userVideo.current) {
+                userVideo.current.srcObject = stream;
+                socket.current.emit("broadcaster", {
+                  room: user && user._id,
+                });
+              }
+
+              addBroadcaster({
+                id: user && user._id,
+                profileImage: user && user.profileimage,
+                name: user && user.firstname + user && user.lastname,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+              setAlert("Getting Media Error", "error");
+            });
+        } catch (err) {
+          setAlert("Camera & Microphone Error", "error");
+          console.log(err);
+        }
+      })
+      .catch((err) => console.log(err));
 
     socket.current.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
@@ -143,6 +159,8 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
     });
 
     window.onunload = window.onbeforeunload = () => {
+      stream.getVideoTracks()[0].enabled = false;
+      setBroadcastingState(!broadcastingState);
       axios
         .delete(`api/broadcasters/${user._id}`)
         .then((response) => console.log(response))
@@ -150,15 +168,24 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
       socket.current.close();
     };
 
-    if (user)
-      axios
-        .post("api/broadcasters", {
-          streamer: user._id,
-          name: user.firstname + user.lastname,
-          profileimage: user.profileimage || "avatar1.png",
-        })
-        .then((response) => console.log(response))
-        .catch((err) => console.log(err));
+    // if (user)
+    //   axios
+    //     .post("api/broadcasters", {
+    //       streamer: user._id,
+    //       name: user.firstname + user.lastname,
+    //       profileimage: user.profileimage || "avatar1.png",
+    //     })
+    //     .then((response) => console.log(response))
+    //     .catch((err) => console.log(err));
+
+    // return () => {
+    //   stream.getVideoTracks()[0].enabled = false;
+    //   setBroadcastingState(!broadcastingState);
+    //   axios
+    //     .delete(`api/broadcasters/${user._id}`)
+    //     .then((response) => console.log(response))
+    //     .catch((err) => console.log(err));
+    // };
   }, [user]);
 
   let UserVideo;
@@ -183,6 +210,7 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
   const handleBroadcast = () => {
     try {
       stream.getVideoTracks()[0].enabled = true;
+      setBroadcastingState(!broadcastingState);
     } catch (err) {
       console.log(err);
     }
@@ -192,6 +220,7 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
         streamer: user._id,
         name: user.firstname + " " + user.lastname,
         profileimage: user.profileimage || "avatar1.png",
+        gender: user.gender,
       })
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
@@ -199,7 +228,7 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
 
   const handleBanBroadcast = () => {
     stream.getVideoTracks()[0].enabled = false;
-
+    setBroadcastingState(!broadcastingState);
     axios
       .delete(`api/broadcasters/${user._id}`)
       .then((response) => console.log(response))
@@ -217,18 +246,18 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
           variant="outlined"
           sx={{ mt: 1 }}
           startIcon={<NearMeOutlinedIcon />}
-          onClick={handleBroadcast}
+          onClick={broadcastingState ? handleBroadcast : handleBanBroadcast}
         >
-          Broadcast
+          {broadcastingState ? "Broadcast" : "Stop Broadcast"}
         </Button>
-        <Button
+        {/* <Button
           variant="outlined"
           sx={{ mt: 1 }}
           startIcon={<NearMeDisabledOutlinedIcon />}
           onClick={handleBanBroadcast}
         >
           Ban User
-        </Button>
+        </Button> */}
       </Grid>
 
       <Grid container spacing={2} sx={{ flexGrow: 1, mt: 2 }}>
@@ -263,14 +292,15 @@ const BroadcasterVideoChat = ({ user, setAlert, addBroadcaster }) => {
                   <ListItemAvatar>
                     <Avatar
                       alt="Remy Sharp"
-                      src={
-                        "http://" +
-                        window.location.hostname +
-                        ":5000/images/" +
-                        "avatar" +
-                        (1 + Math.floor(Math.random() * 4)) +
-                        ".png"
-                      }
+                      // src={
+                      //   "http://" +
+                      //   window.location.hostname +
+                      //   ":5000/images/" +
+                      //   "avatar" +
+                      //   (1 + Math.floor(Math.random() * 4)) +
+                      //   ".png"
+                      // }
+                      src={`${Constants.USER_SERVER_URL}/images/avatar1.png`}
                     />
                   </ListItemAvatar>
                   <ListItemText

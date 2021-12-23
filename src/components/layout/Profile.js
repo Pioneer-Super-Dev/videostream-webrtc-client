@@ -1,11 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -31,6 +31,17 @@ import Fade from "@mui/material/Fade";
 import Zoom from "@mui/material/Zoom";
 import Constants from "../../constants/Constants";
 import { setAlert } from "../../actions/alert";
+
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
 
 const ImageThumb = ({ image }) => {
   if (image.name) {
@@ -60,6 +71,28 @@ function Profile({ user, setAlert }) {
   const [genders, setGenders] = React.useState([]);
   // const [profileImage, setProfileImage] = React.useState("");
   const [biography, setBiography] = React.useState("");
+  const [open, setOpen] = React.useState(true);
+
+  const navigate = useNavigate();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleSend = () => {
+    axios
+      .post(`api/streamers/verification/${user && user._id}`)
+      .then((response) => setFile(response.data))
+      .catch((err) => console.log(err));
+
+    setAlert("Verification Required\n Wait until accept", "success");
+    setOpen(true);
+  };
+
+  const handleLater = () => {
+    setOpen(false);
+    navigate("/");
+  };
 
   React.useEffect(() => {
     axios
@@ -75,6 +108,9 @@ function Profile({ user, setAlert }) {
     setGender(user && user.gender);
     setFile(user && user.profileimage);
     setBiography(user && user.biography);
+
+    if (!user || user.verification != 2) setOpen(true);
+    else setOpen(false);
   }, []);
 
   // const [formData, setFormData] = React.useState({
@@ -224,6 +260,44 @@ function Profile({ user, setAlert }) {
             </Button>
           </Box>
         </Box>
+
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleLater}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          {user && user.verification ? (
+            <>
+              <DialogTitle>{"ID VERIFICATION"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  Verification is on progress. Wait until accepted
+                </DialogContentText>
+              </DialogContent>
+            </>
+          ) : (
+            <>
+              <DialogTitle>{"ID VERIFICATION"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  <TextField
+                    multiline
+                    required
+                    fullWidth
+                    minRows="4"
+                    placeholder="Input Verification Infomation"
+                  />
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleLater}>See Later</Button>
+                <Button onClick={handleSend}>Send</Button>
+              </DialogActions>
+            </>
+          )}
+        </Dialog>
       </Container>
     </Grow>
   );

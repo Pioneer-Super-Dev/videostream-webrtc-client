@@ -29,6 +29,9 @@ import PropTypes from "prop-types";
 import { Navigate } from "react-router-dom";
 import BroadcasterVideoChat from "./BroadcasterVideoChat";
 import Grow from "@mui/material/Grow";
+import ImageListItem from "@mui/material/ImageListItem";
+import Constants from "../../constants/Constants";
+import axios from "axios";
 
 const ariaLabel = { "aria-label": "description" };
 
@@ -60,6 +63,35 @@ function Copyright(props) {
 const theme = createTheme();
 
 const Broadcaster = ({ auth, level }) => {
+  const [flag, setFlag] = React.useState(true);
+  const [itemData, setItemData] = React.useState([
+    {
+      _id: "61bdcfcbb585fbca8f65fbd0",
+      streamer: "61addc0d0ca8c27b321b9b54",
+      name: "",
+      title: "",
+      price: "",
+      description: "",
+      paid: 0,
+    },
+  ]);
+
+  React.useEffect(async () => {
+    await axios
+      .get(
+        `${Constants.USER_SERVER_URL}/api/upload/fileadd/${
+          auth.user && auth.user._id
+        }`
+      )
+      .then((response) => {
+        console.log(response.data);
+        setItemData(response.data);
+      })
+      .catch((err) => console.log(err));
+
+    if (auth.user == null) setFlag(!flag);
+  }, [flag]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -71,6 +103,10 @@ const Broadcaster = ({ auth, level }) => {
   };
 
   if (level != 1) return <Navigate to="/loginstreamer" />;
+  else {
+    if (auth.user && auth.user.verification != 2)
+      return <Navigate to="/profile" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -131,32 +167,52 @@ const Broadcaster = ({ auth, level }) => {
             </Grid>
 
             <Grid container spacing={2} sx={{ flexGrow: 1, mt: 1 }}>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Video</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Video</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Video</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Video</Item>
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} sx={{ flexGrow: 1, mt: 1 }}>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Image</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Image</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Image</Item>
-              </Grid>
-              <Grid item md={3} sm={6} xs={12}>
-                <Item>Image</Item>
-              </Grid>
+              {itemData ? (
+                itemData.map((item) => (
+                  <Grid
+                    item
+                    md={3}
+                    sm={6}
+                    xs={12}
+                    fullWidth
+                    style={{ margin: "auto" }}
+                  >
+                    <ImageListItem key={item.name}>
+                      {item.name.endsWith("mp4") ? (
+                        <video width="100%" height="100%" controls>
+                          <source
+                            src={`${Constants.USER_SERVER_URL}/upload/${item.name}`}
+                            type="video/mp4"
+                          />
+                        </video>
+                      ) : (
+                        <img
+                          width="100%"
+                          height="100%"
+                          src={`${Constants.USER_SERVER_URL}/upload/${item.name}`}
+                          srcSet={``}
+                          alt={item.title}
+                          loading="lazy"
+                        />
+                      )}
+                      {/* <ImageListItemBar
+                    title={item.title}
+                    subtitle={item.description}
+                    actionIcon={
+                      <IconButton
+                        sx={{ color: "rgba(255, 255, 255, 0.54)" }}
+                        aria-label={`info about ${item.title}`}
+                      >
+                        <InfoIcon />
+                      </IconButton>
+                    }
+                  /> */}
+                    </ImageListItem>
+                  </Grid>
+                ))
+              ) : (
+                <></>
+              )}
             </Grid>
           </Box>
           <Copyright sx={{ mt: 8, mb: 4 }} />

@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useRef, Suspense } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -15,14 +18,31 @@ import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import io from "socket.io-client";
 import Constants from "../../constants/Constants";
+import axios from "axios";
+import Alert from "@mui/material/Alert";
+import ShopIcon from "@mui/icons-material/Shop";
+import InputAdornment from "@mui/material/InputAdornment";
+import { useNavigate } from "react-router-dom";
 
 const ariaLabel = { "aria-label": "description" };
 
-const WatcherVideoChat = ({ roomid }) => {
+var timeCounter = 0;
+var initialTime;
+
+const WatcherVideoChat = ({ user, roomid }) => {
   const socket = useRef();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [flag, setFlag] = useState(false);
+  const [time, setTime] = useState(0);
+  const [watching, setWatching] = useState(true);
   const userVideo = useRef();
+  const timeShow = useRef();
+  const [buyTime, setBuyTime] = useState(1);
+
+  let intervalRef = useRef();
+  const navigate = useNavigate();
+
   let peerConnection;
   const config = {
     iceServers: [
@@ -43,9 +63,13 @@ const WatcherVideoChat = ({ roomid }) => {
       reconnectionAttempts: 5,
     });
 
-    socket.current.emit("login", { name: "watcher", room: roomid }, (error) => {
-      if (error) console.log(error);
-    });
+    socket.current.emit(
+      "login",
+      { name: user && user.firstname + " " + user.lastname, room: roomid },
+      (error) => {
+        if (error) console.log(error);
+      }
+    );
 
     socket.current.on("message", (msg) => {
       console.log(msg);
@@ -66,7 +90,9 @@ const WatcherVideoChat = ({ roomid }) => {
       peerConnection.ontrack = (event) => {
         try {
           userVideo.current.srcObject = event.streams[0];
+          setWatching(true);
         } catch (e) {
+          setWatching(false);
           console.log(e);
         }
         // peerConnection.ontrack.onunmute = () => console.log("Audio data arriving!");
@@ -81,7 +107,10 @@ const WatcherVideoChat = ({ roomid }) => {
     socket.current.on("candidate", (id, candidate) => {
       peerConnection
         .addIceCandidate(new RTCIceCandidate(candidate))
-        .catch((e) => console.error(e));
+        .catch((e) => {
+          setWatching(false);
+          console.error(e);
+        });
     });
 
     socket.current.on("connect", () => {
@@ -93,10 +122,53 @@ const WatcherVideoChat = ({ roomid }) => {
     });
 
     window.onunload = window.onbeforeunload = () => {
+      setWatching(false);
       socket.current.close();
       peerConnection.close();
     };
+
+    intervalRef.current = setInterval(timeCount, 1000);
+
+    return () => clearInterval(intervalRef.current);
   }, []);
+
+  const timeCount = () => {
+    if (watching) setTime((prev) => prev - 1);
+    timeCounter++;
+    console.log(initialTime, timeCounter);
+
+    if (user != null)
+      axios
+        .post(`${Constants.USER_SERVER_URL}/api/watchingtime`, {
+          streamer: roomid,
+          watcher: user && user._id,
+          time: initialTime - timeCounter,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (user == null) setFlag(!flag);
+    else {
+      axios
+        .get(
+          `${Constants.USER_SERVER_URL}/api/watchingtime/${roomid}/${user._id}`,
+          {
+            streamer: roomid,
+            watcher: user && user._id,
+          }
+        )
+        .then((response) => {
+          console.log(response.data.time);
+          initialTime = response.data.time;
+          setTime(response.data.time);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [flag]);
 
   let UserVideo;
 
@@ -111,6 +183,41 @@ const WatcherVideoChat = ({ roomid }) => {
       autoPlay
     />
   );
+
+  const onBuyTime = (e) => {
+    setBuyTime(e.target.value);
+  };
+
+  const handleBuy = (e) => {
+    e.preventDefault();
+
+    navigate(`/stripepayment/${roomid}/${user && user._id}/0/${buyTime / 5}`);
+
+    axios
+      .post(`${Constants.USER_SERVER_URL}/api/payment`, {
+        from: user && user._id,
+        to: roomid,
+        amount: buyTime / 5,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => console.log(err));
+
+    axios
+      .post(`${Constants.USER_SERVER_URL}/api/watchingtime`, {
+        streamer: roomid,
+        watcher: user && user._id,
+        time: time + buyTime * 60,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setTime(setTime((prev) => prev + buyTime * 60));
+      })
+      .catch((err) => console.log(err));
+
+    timeCounter = 0;
+  };
 
   return (
     <React.Fragment>
@@ -163,14 +270,7 @@ const WatcherVideoChat = ({ roomid }) => {
                   <ListItemAvatar>
                     <Avatar
                       alt="Remy Sharp"
-                      src={
-                        "http://" +
-                        window.location.hostname +
-                        ":5000/images/" +
-                        "avatar" +
-                        (1 + Math.floor(Math.random() * 4)) +
-                        ".png"
-                      }
+                      src={`${Constants.USER_SERVER_URL}/images/avatar1.png`}
                     />
                   </ListItemAvatar>
                   <ListItemText
@@ -210,8 +310,48 @@ const WatcherVideoChat = ({ roomid }) => {
           </Grid>
         </Grid>
       </Grid>
+      <Grid
+        container
+        sx={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          flexGrow: 1,
+          mt: 5,
+        }}
+        md={10}
+      >
+        <Button variant="contained" mr={3} sx={{ mt: 1 }}>
+          {time < 0 ? 0 : time} s Left
+        </Button>
+        <Input
+          defaultValue="1"
+          value={buyTime}
+          placeholder="Input Minutes"
+          type="number"
+          endAdornment={<InputAdornment position="end">minute</InputAdornment>}
+          inputProps={ariaLabel}
+          onChange={onBuyTime}
+          minValue="1"
+        />
+        <Button
+          variant="outlined"
+          sx={{ mt: 1 }}
+          startIcon={<ShopIcon />}
+          onClick={handleBuy}
+        >
+          Buy ${buyTime / 5}
+        </Button>
+      </Grid>
     </React.Fragment>
   );
 };
 
-export default WatcherVideoChat;
+WatcherVideoChat.propTypes = {
+  user: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(WatcherVideoChat);
